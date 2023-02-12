@@ -9,7 +9,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -- --port $PORT",
-    "lint": "next lint"
+    "lint": "next lint",
+    "server": "npm run build && npm run start"
   },
   "dependencies": {
     "@next/font": "13.1.6",
