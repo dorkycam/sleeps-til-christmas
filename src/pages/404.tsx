@@ -1,5 +1,4 @@
 import { minTablet } from '@/styles/mediaQueries';
-import Error from 'next/error';
 import Head from 'next/head';
 import Link from 'next/link';
 import styled from 'styled-components';
@@ -8,7 +7,7 @@ const Container = styled.div`
   background-color: #ffffff;
   color: black;
   margin: 0;
-  height: 100vh;
+  height: calc(100vh - 100px);
   text-align: center;
   justify-content: center;
   align-items: center;

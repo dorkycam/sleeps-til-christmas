@@ -1,5 +1,4 @@
 import { InteractiveHearts } from '@/components/particles/InteractiveHearts';
-import { InteractiveSnow } from '@/components/particles/InteractiveSnow';
 import { SleepCountdown } from '@/components/SleepCountdown';
 import Head from 'next/head';
 import styled from 'styled-components';
