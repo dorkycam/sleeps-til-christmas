@@ -5,8 +5,6 @@ import { loadFull } from 'tsparticles';
 import type { Container, Engine } from 'tsparticles-engine';
 
 const StyledParticles = styled(Particles)`
-  height: 100vh;
-  width: 100vw;
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;

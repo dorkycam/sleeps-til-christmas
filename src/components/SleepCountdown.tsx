@@ -10,7 +10,7 @@ const CountDown = styled.div`
   right: 50%;
   text-align: center;
   top: 50%;
-  z-index: 5;
+  z-index: 1000;
   width: 100%;
 `;
 

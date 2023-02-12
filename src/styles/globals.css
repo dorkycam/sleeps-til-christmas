@@ -3,6 +3,8 @@ body {
   overflow-x: hidden;
   font-family: -apple-system, BlinkMacSystemFont, Roboto, 'Segoe UI',
     'Fira Sans', Avenir, 'Helvetica Neue', 'Lucida Grande', sans-serif;
+  height: fill-available;
+  height: -webkit-fill-available;
 }
 
 body {
@@ -11,6 +13,9 @@ body {
   margin: 0;
   overflow: hidden;
   padding: 0;
+  min-height: 100vh;
+  min-height: fill-available;
+  min-height: -webkit-fill-available;
 }
 
 a {

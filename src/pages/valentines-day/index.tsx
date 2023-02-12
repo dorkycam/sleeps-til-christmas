@@ -1,14 +1,7 @@
+import { PageContainer } from '@/components/PageContainer';
 import { InteractiveHearts } from '@/components/particles/InteractiveHearts';
 import { SleepCountdown } from '@/components/SleepCountdown';
 import Head from 'next/head';
-import styled from 'styled-components';
-
-const Container = styled.div`
-  margin: 0;
-  position: relative;
-  min-width: 100%;
-  height: 100%;
-`;
 
 export default function ValentinesDayPage() {
   return (
@@ -17,7 +10,7 @@ export default function ValentinesDayPage() {
         <title>Sleeps &apos;til Valentine&apos;s Day</title>
       </Head>
       <main>
-        <Container>
+        <PageContainer>
           <SleepCountdown
             holiday={{
               month: 2,
@@ -27,7 +20,7 @@ export default function ValentinesDayPage() {
             }}
           />
           <InteractiveHearts />
-        </Container>
+        </PageContainer>
       </main>
     </>
   );

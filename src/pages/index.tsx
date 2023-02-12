@@ -1,14 +1,7 @@
+import { PageContainer } from '@/components/PageContainer';
 import { InteractiveSnow } from '@/components/particles/InteractiveSnow';
 import { SleepCountdown } from '@/components/SleepCountdown';
 import Head from 'next/head';
-import styled from 'styled-components';
-
-const Container = styled.div`
-  margin: 0;
-  position: relative;
-  min-width: 100%;
-  height: 100%;
-`;
 
 export default function Home() {
   return (
@@ -20,10 +13,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Container>
+        <PageContainer>
           <SleepCountdown />
           <InteractiveSnow />
-        </Container>
+        </PageContainer>
       </main>
     </>
   );
