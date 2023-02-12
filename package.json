@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start -- --port $PORT",
     "lint": "next lint",
-    "server": "npm run build && npm run start"
+    "server": "npm run build && npm run start",
+    "deploy": "eb deploy production -v"
   },
   "dependencies": {
     "@next/font": "13.1.6",
