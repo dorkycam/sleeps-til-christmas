@@ -20,7 +20,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - uses: hmanzur/actions-aws-eb@v1.0.0
       - uses: actions/checkout@v3
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
@@ -29,4 +28,10 @@ jobs:
           cache: 'npm'
       - run: npm install
       - run: npm run build --if-present
-      - run: npm run deploy
+      - uses: hmanzur/actions-aws-eb@v1.0.0
+        with:
+          command: 'deploy production'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
