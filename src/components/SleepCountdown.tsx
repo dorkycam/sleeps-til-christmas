@@ -40,11 +40,28 @@ const StyledH2 = styled.h2`
   }
 `;
 
-export function SleepCountdown() {
+interface SleepCountdownProps {
+  holiday?: {
+    month: number;
+    day: number;
+    message: string;
+    name: string;
+  };
+}
+
+export function SleepCountdown({
+  holiday = {
+    month: 12,
+    day: 25,
+    message: 'Merry Christmas!',
+    name: 'christmas',
+  },
+}: SleepCountdownProps) {
+  const { month, day, message, name } = holiday;
   const today = dayjs();
   const currentYear = dayjs().year();
-  const christmasThisYear = `${currentYear}-12-25`;
-  const christmasNextYear = `${currentYear + 1}-12-25`;
+  const christmasThisYear = `${currentYear}-${month}-${day}`;
+  const christmasNextYear = `${currentYear + 1}-${month}-${day}`;
 
   const isBeforeChristmas = today.isBefore(christmasThisYear);
   const isChristmas = today.isSame(christmasThisYear);
@@ -58,12 +75,12 @@ export function SleepCountdown() {
   return (
     <CountDown>
       {isChristmas ? (
-        <StyledH1>Merry Christmas!</StyledH1>
+        <StyledH1>{message}</StyledH1>
       ) : (
         <>
           <StyledH1>{sleepsTilChristmas}</StyledH1>
           <StyledH2>
-            sleep{sleepsTilChristmas > 1 && 's'} &apos;til christmas
+            sleep{sleepsTilChristmas > 1 && 's'} &apos;til {name}
           </StyledH2>
         </>
       )}
