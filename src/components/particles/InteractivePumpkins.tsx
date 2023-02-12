@@ -41,6 +41,7 @@ export function InteractivePumpkins() {
             direction: 'none',
             enable: true,
             collisions: true,
+            bounce: true,
             outModes: {
               default: 'bounce',
             },
