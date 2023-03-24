@@ -9,6 +9,11 @@ export default function AliyorsBirthdayPage() {
     <>
       <Head>
         <title>Sleeps &apos;til Aliyor&apos;s Birthday</title>
+        <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="description"
+          content="See how many sleeps there are until Aliyor's Birthday!"
+        />
       </Head>
       <main>
         <PageContainer>
