@@ -1,4 +1,5 @@
 import { minDesktop, minTablet } from '@/styles/mediaQueries';
+import { Typography } from 'antd';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
 
@@ -14,29 +15,37 @@ const CountDown = styled.div`
   width: 100%;
 `;
 
-const StyledH1 = styled.h1`
-  font-size: 100px;
-  margin: 0;
+const StyledH1 = styled(Typography.Title).attrs({ level: 1 })`
+  &&& {
+    color: #ffffff;
+    font-size: 100px;
+    font-weight: 700;
+    margin: 0;
 
-  @media ${minTablet} {
-    font-size: 150px;
-  }
+    @media ${minTablet} {
+      font-size: 150px;
+    }
 
-  @media ${minDesktop} {
-    font-size: 150px;
+    @media ${minDesktop} {
+      font-size: 150px;
+    }
   }
 `;
 
-const StyledH2 = styled.h2`
-  font-size: 30px;
-  margin: 0;
-  width: 100%;
+const StyledH2 = styled(Typography.Title).attrs({ level: 2 })`
+  &&& {
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0;
+    width: 100%;
 
-  @media ${minTablet} {
-    font-size: 40px;
-  }
+    @media ${minTablet} {
+      font-size: 40px;
+    }
 
-  @media ${minDesktop} {
+    @media ${minDesktop} {
+    }
   }
 `;
 

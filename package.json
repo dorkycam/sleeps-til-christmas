@@ -14,11 +14,13 @@
     "deploy": "eb deploy production -v"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.0.1",
     "@next/font": "13.1.6",
     "@types/node": "18.13.0",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
     "@types/styled-components": "^5.1.26",
+    "antd": "^5.4.6",
     "dayjs": "^1.11.7",
     "eslint": "^8.34.0",
     "eslint-config-next": "13.1.6",

@@ -1,16 +1,36 @@
-import Document, { Head, Html, Main, NextScript } from 'next/document';
-import { DocumentContext } from 'next/dist/shared/lib/utils';
+import Document, {
+  DocumentContext,
+  Html,
+  Head,
+  Main,
+  NextScript,
+  DocumentInitialProps,
+} from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
+import { createCache, extractStyle, StyleProvider } from '@ant-design/cssinjs';
 
-export default class ProtofundDocument extends Document {
-  static async getInitialProps(ctx: DocumentContext) {
-    const sheet = new ServerStyleSheet();
+export default class MyDocument extends Document {
+  static async getInitialProps(
+    ctx: DocumentContext,
+  ): Promise<DocumentInitialProps> {
     const originalRenderPage = ctx.renderPage;
+
+    // for styled-components
+    const sheet = new ServerStyleSheet();
+
+    // for antd
+    const cache = createCache();
 
     try {
       ctx.renderPage = () =>
         originalRenderPage({
-          enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
+          // eslint-disable-next-line react/display-name
+          enhanceApp: App => props =>
+            sheet.collectStyles(
+              <StyleProvider cache={cache}>
+                <App {...props} />
+              </StyleProvider>,
+            ),
         });
 
       const initialProps = await Document.getInitialProps(ctx);
@@ -19,17 +39,28 @@ export default class ProtofundDocument extends Document {
         styles: (
           <>
             {initialProps.styles}
-            {sheet.getStyleElement()}
+            {
+              <div
+                id="__antdCssInJs"
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{
+                  __html: extractStyle(cache) /* for antd */,
+                }}
+              />
+            }
+            {sheet.getStyleElement() /* for styled-components */}
           </>
         ),
       };
     } finally {
+      // for styled-components
       sheet.seal();
     }
   }
-  render() {
+
+  render(): JSX.Element {
     return (
-      <Html lang="en">
+      <Html>
         <Head />
         <body>
           <Main />

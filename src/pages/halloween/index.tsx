@@ -3,7 +3,7 @@ import { InteractivePumpkins } from '@/components/particles/InteractivePumpkins'
 import { SleepCountdown } from '@/components/SleepCountdown';
 import Head from 'next/head';
 
-export default function ValentinesDayPage() {
+export default function HalloweenPage() {
   return (
     <>
       <Head>
