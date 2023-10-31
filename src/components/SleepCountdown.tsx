@@ -15,7 +15,7 @@ const CountDown = styled.div`
 `;
 
 const StyledH1 = styled.h1`
-  font-size: 100px;
+  font-size: 60px;
   margin: 0;
 
   @media ${minTablet} {
@@ -59,12 +59,12 @@ export function SleepCountdown({
 }: SleepCountdownProps) {
   const { month, day, message, name } = holiday;
   const today = dayjs();
-  const currentYear = dayjs().year();
+  const currentYear = today.year();
   const christmasThisYear = `${currentYear}-${month}-${day}`;
   const christmasNextYear = `${currentYear + 1}-${month}-${day}`;
 
   const isBeforeChristmas = today.isBefore(christmasThisYear);
-  const isChristmas = today.isSame(christmasThisYear);
+  const isChristmas = today.isSame(christmasThisYear, 'day');
 
   const sleepsTilChristmas =
     dayjs(isBeforeChristmas ? christmasThisYear : christmasNextYear).diff(
