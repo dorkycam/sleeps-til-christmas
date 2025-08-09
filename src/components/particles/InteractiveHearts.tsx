@@ -21,7 +21,7 @@ export function InteractiveHearts() {
               enable: true,
               mode: 'attract',
             },
-            resize: true,
+            // resize: true,
           },
           modes: {
             push: {
@@ -40,8 +40,8 @@ export function InteractiveHearts() {
           move: {
             direction: 'none',
             enable: true,
-            collisions: true,
-            bounce: true,
+            // collisions: true,
+            // bounce: true,
             outModes: {
               default: 'out',
             },
@@ -50,7 +50,7 @@ export function InteractiveHearts() {
           number: {
             density: {
               enable: true,
-              area: 800,
+              // area: 800,
             },
             value: 80,
           },
@@ -59,9 +59,9 @@ export function InteractiveHearts() {
           },
           shape: {
             type: 'image',
-            image: {
-              src: 'https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/77965/pink-heart-clipart-md.png',
-            },
+            // image: {
+            //   src: 'https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/77965/pink-heart-clipart-md.png',
+            // },
           },
           size: {
             value: { min: 4, max: 10 },

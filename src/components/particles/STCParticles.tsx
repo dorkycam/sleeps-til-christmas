@@ -1,8 +1,11 @@
-import { useCallback } from 'react';
-import Particles, { ParticlesProps } from 'react-tsparticles';
+import { Container } from '@tsparticles/engine';
+import Particles, {
+  initParticlesEngine,
+  IParticlesProps,
+} from '@tsparticles/react';
+import { loadSlim } from '@tsparticles/slim';
+import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { loadFull } from 'tsparticles';
-import type { Container, Engine } from 'tsparticles-engine';
 
 const StyledParticles = styled(Particles)`
   position: -webkit-sticky; /* Safari */
@@ -12,28 +15,32 @@ const StyledParticles = styled(Particles)`
 
 export function STCParticles({
   ...props
-}: Omit<ParticlesProps, 'id' | 'init' | 'loaded'>) {
-  const particlesInit = useCallback(async (engine: Engine) => {
-    console.log(engine);
+}: Omit<IParticlesProps, 'id' | 'init' | 'loaded'>) {
+  const [init, setInit] = useState(false);
 
-    // you can initialize the tsParticles instance (engine) here, adding custom shapes or presets
-    // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-    // starting from v2 you can add only the features you need reducing the bundle size
-    await loadFull(engine);
+  // this should be run only once per application lifetime
+  useEffect(() => {
+    initParticlesEngine(async engine => {
+      // you can initiate the tsParticles instance (engine) here, adding custom shapes or presets
+      // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
+      // starting from v2 you can add only the features you need reducing the bundle size
+      //await loadAll(engine);
+      //await loadFull(engine);
+      await loadSlim(engine);
+      //await loadBasic(engine);
+    }).then(() => {
+      setInit(true);
+    });
   }, []);
 
-  const particlesLoaded = useCallback(
-    async (container: Container | undefined) => {
-      console.log(container);
-    },
-    [],
-  );
+  const particlesLoaded = useCallback(async (container?: Container) => {
+    console.log(container);
+  }, []);
 
   return (
     <StyledParticles
       id="tsparticles"
-      init={particlesInit}
-      loaded={particlesLoaded}
+      particlesLoaded={particlesLoaded}
       {...props}
     />
   );

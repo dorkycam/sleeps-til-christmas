@@ -21,7 +21,7 @@ export function InteractiveSnow() {
               enable: true,
               mode: 'repulse',
             },
-            resize: true,
+            // resize: true,
           },
           modes: {
             push: {
@@ -48,7 +48,7 @@ export function InteractiveSnow() {
           number: {
             density: {
               enable: true,
-              area: 800,
+              // area: 800,
             },
             value: 80,
           },

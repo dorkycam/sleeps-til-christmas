@@ -21,7 +21,7 @@ export function InteractivePumpkins() {
               enable: true,
               mode: 'repulse',
             },
-            resize: true,
+            // resize: true,
           },
           modes: {
             push: {
@@ -40,8 +40,8 @@ export function InteractivePumpkins() {
           move: {
             direction: 'none',
             enable: true,
-            collisions: true,
-            bounce: true,
+            // collisions: true,
+            // bounce: true,
             outModes: {
               default: 'bounce',
             },
@@ -50,7 +50,7 @@ export function InteractivePumpkins() {
           number: {
             density: {
               enable: true,
-              area: 800,
+              // area: 800,
             },
             value: 30,
           },
@@ -59,9 +59,9 @@ export function InteractivePumpkins() {
           },
           shape: {
             type: 'image',
-            image: {
-              src: 'https://www.pngplay.com/wp-content/uploads/13/Pumpkin-Clipart-Download-Free-PNG.png',
-            },
+            // image: {
+            //   src: 'https://www.pngplay.com/wp-content/uploads/13/Pumpkin-Clipart-Download-Free-PNG.png',
+            // },
           },
           size: {
             value: { min: 10, max: 50 },
