@@ -29,7 +29,7 @@ This repository uses GitHub Actions for automated testing, building, and deploym
 **Jobs:**
 
 - **Lint & Build:**
-  - ✅ Lint code on Node.js 18.x & 20.x
+  - ✅ Lint code on Node.js 20.x
   - 🏗️ Build verification
   - 📦 Bundle size check
   - 🔧 Yarn installation and caching
@@ -65,7 +65,7 @@ This repository uses GitHub Actions for automated testing, building, and deploym
 
 ### For All PRs:
 
-1. ✅ Tests pass on Node.js 18.x & 20.x
+1. ✅ Tests pass on Node.js 20.x
 2. ✅ TypeScript compiles without errors
 3. ✅ Linting passes
 
