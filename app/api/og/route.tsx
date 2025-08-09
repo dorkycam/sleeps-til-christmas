@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     const holidaySlug = searchParams.get('holiday') || 'christmas';
     const sleeps =
       searchParams.get('sleeps') || searchParams.get('days') || '0'; // Support both for backward compatibility
+    const size = searchParams.get('size') || 'large'; // 'large' (1200x630) or 'small' (600x315)
 
     const holiday = getHolidayBySlug(holidaySlug);
     if (!holiday) {
@@ -33,6 +34,14 @@ export async function GET(request: NextRequest) {
         ? `Today is ${holiday.name}!`
         : `${countdownText} Until ${holiday.name}`;
 
+    // Determine dimensions based on size parameter
+    const isSmall = size === 'small';
+    const imageWidth = isSmall ? 600 : 1200;
+    const imageHeight = isSmall ? 315 : 630;
+
+    // Scale font sizes for smaller images
+    const fontScale = isSmall ? 0.6 : 1;
+
     return new ImageResponse(
       (
         <div
@@ -50,11 +59,11 @@ export async function GET(request: NextRequest) {
           {/* Main countdown number */}
           <div
             style={{
-              fontSize: sleepsNumber > 99 ? '120px' : '180px',
+              fontSize: (sleepsNumber > 99 ? 120 : 180) * fontScale + 'px',
               fontWeight: 900,
               color: colors.text,
               lineHeight: 1,
-              marginBottom: '20px',
+              marginBottom: 20 * fontScale + 'px',
               textShadow: '4px 4px 8px rgba(0, 0, 0, 0.3)',
             }}
           >
@@ -64,12 +73,12 @@ export async function GET(request: NextRequest) {
           {/* Main text */}
           <div
             style={{
-              fontSize: '48px',
+              fontSize: 48 * fontScale + 'px',
               fontWeight: 700,
               color: colors.text,
               textAlign: 'center',
-              marginBottom: '12px',
-              maxWidth: '900px',
+              marginBottom: 12 * fontScale + 'px',
+              maxWidth: 900 * fontScale + 'px',
               lineHeight: 1.1,
             }}
           >
@@ -79,12 +88,12 @@ export async function GET(request: NextRequest) {
           {/* Subtitle */}
           <div
             style={{
-              fontSize: '28px',
+              fontSize: 28 * fontScale + 'px',
               fontWeight: 500,
               color: colors.text,
               opacity: 0.9,
               textAlign: 'center',
-              maxWidth: '800px',
+              maxWidth: 800 * fontScale + 'px',
             }}
           >
             {sleepsNumber === 0
@@ -96,9 +105,9 @@ export async function GET(request: NextRequest) {
           <div
             style={{
               position: 'absolute',
-              bottom: '40px',
-              right: '40px',
-              fontSize: '24px',
+              bottom: 40 * fontScale + 'px',
+              right: 40 * fontScale + 'px',
+              fontSize: 24 * fontScale + 'px',
               fontWeight: 600,
               color: colors.text,
               opacity: 0.8,
@@ -109,8 +118,8 @@ export async function GET(request: NextRequest) {
         </div>
       ),
       {
-        width: 1200,
-        height: 630,
+        width: imageWidth,
+        height: imageHeight,
       },
     );
   } catch (error) {

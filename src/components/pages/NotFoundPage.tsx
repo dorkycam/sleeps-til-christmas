@@ -132,10 +132,10 @@ export function NotFoundPage() {
           <ErrorNumber level={1}>404</ErrorNumber>
           <ErrorMessage level={2}>Oops! Page not found</ErrorMessage>
           <Description>
-            The page you're looking for seems to have wandered off into the
+            The page you&apos;re looking for seems to have wandered off into the
             holiday spirit.
             <br />
-            Let's get you back to celebrating!
+            Let&apos;s get you back to celebrating!
           </Description>
         </Space>
 

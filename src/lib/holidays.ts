@@ -1,7 +1,4 @@
-import {
-  Holiday,
-  type IconName,
-} from '@/components/countdown/HolidayCountdown';
+import { Holiday } from '@/components/countdown/HolidayCountdown';
 
 /**
  * Holiday Database

@@ -129,7 +129,8 @@ function ParticleBackgroundInner({ theme }: ParticleBackgroundProps) {
   }, [mounted]);
 
   // Callback when particles are loaded (can add custom logic here)
-  const particlesLoaded = useCallback(async (container?: Container) => {
+  // @typescript-eslint/no-unused-vars
+  const particlesLoaded = useCallback(async (_container?: Container) => {
     // Optional: Add any initialization logic here
   }, []);
 

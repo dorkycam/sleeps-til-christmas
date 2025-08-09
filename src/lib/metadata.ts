@@ -39,7 +39,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
     description,
     keywords: keywords.join(', '),
 
-    // Open Graph for social sharing
+    // Open Graph for social sharing (Facebook, Instagram, LinkedIn, WhatsApp, Discord, etc.)
     openGraph: {
       title: fullTitle,
       description,
@@ -49,23 +49,67 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       type: 'website',
       locale: 'en_US',
 
-      // Dynamic social card image (we'll create this)
+      // Dynamic social card image (used by most platforms)
       images: [
         {
           url: `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}`,
           width: 1200,
           height: 630,
           alt: `${sleepsUntil} sleeps until ${holiday.name}`,
+          type: 'image/png',
+        },
+        // Smaller image for platforms that prefer it
+        {
+          url: `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}&size=small`,
+          width: 600,
+          height: 315,
+          alt: `${sleepsUntil} sleeps until ${holiday.name}`,
+          type: 'image/png',
         },
       ],
     },
 
-    // Twitter card
+    // Twitter/X card (also used by some other platforms)
     twitter: {
       card: 'summary_large_image',
+      site: '@sleepstilxmas', // Add your Twitter handle if you have one
+      creator: '@sleepstilxmas',
       title: fullTitle,
       description,
-      images: [`/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}`],
+      images: [
+        {
+          url: `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}`,
+          alt: `${sleepsUntil} sleeps until ${holiday.name}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+
+    // Additional metadata for better platform support
+    other: {
+      // Telegram link preview
+      'telegram:channel': '@sleepstilchristmas',
+
+      // WhatsApp & iMessage meta tags
+      'apple-mobile-web-app-title': fullTitle,
+      'application-name': "Sleeps 'til Christmas",
+
+      // Pinterest Rich Pins
+      'pinterest-rich-pin': 'true',
+
+      // Slack unfurling
+      'slack-app-id': 'sleeps-til-christmas',
+
+      // Discord embed
+      'theme-color': colors.primary,
+
+      // Generic social media meta
+      'social:title': fullTitle,
+      'social:description': description,
+      'social:image': `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}`,
+      'social:url':
+        holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`,
     },
 
     // Additional SEO tags
@@ -81,13 +125,28 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       },
     },
 
-    // Theme color based on holiday
+    // Theme color based on holiday (used by mobile browsers and some apps)
     themeColor: colors.primary,
 
     // Canonical URL
     alternates: {
       canonical:
         holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`,
+    },
+
+    // App-like behavior on mobile
+    viewport: {
+      width: 'device-width',
+      initialScale: 1,
+      maximumScale: 5,
+      userScalable: true,
+    },
+
+    // Apple/iOS specific tags
+    appleWebApp: {
+      capable: true,
+      title: "Sleeps 'til Christmas",
+      statusBarStyle: 'default',
     },
   };
 }

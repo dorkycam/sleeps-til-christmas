@@ -122,7 +122,7 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
         {countdown.sleepsUntil}
       </CountdownNumberLarge>
       <CountdownLabel level={2} style={{ color: colors.text }}>
-        sleep{countdown.sleepsUntil !== 1 ? 's' : ''} 'til {holiday.name}
+        sleep{countdown.sleepsUntil !== 1 ? 's' : ''} &apos;til {holiday.name}
       </CountdownLabel>
     </Container>
   );
