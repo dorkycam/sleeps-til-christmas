@@ -28,6 +28,7 @@
     "next": "^15.4.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-spotify-embed": "^2.0.4",
     "styled-components": "^6.1.19",
     "tsparticles": "^3.9.1",
     "typescript": "^5.9.2"

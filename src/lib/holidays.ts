@@ -15,6 +15,9 @@ export const holidays = {
     name: 'christmas',
     theme: 'christmas' as const,
     iconName: 'home' as const,
+    spotifyLinks: [
+      'https://open.spotify.com/playlist/5VtKqkQ38BaTNDE45S7M8l?si=213b7495d5fb494d',
+    ],
   },
   halloween: {
     slug: 'halloween' as const,

@@ -1,11 +1,29 @@
-import { ReactNode } from 'react';
+'use client';
+
 import { Layout } from 'antd';
+import { ReactNode } from 'react';
+import styled from 'styled-components';
 
-const { Content } = Layout;
+const { Content, Footer } = Layout;
 
+const StyledFooter = styled(Footer)`
+  background: transparent;
+  bottom: 0;
+  left: 0;
+  min-height: 70px;
+  padding: 25px;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  z-index: 1000;
+`;
 interface SafePageContainerProps {
   children: ReactNode;
   background?: string;
+  footerContent?: ReactNode;
+  footerOptions?: {
+    onDoubleClick?: () => void;
+  };
 }
 
 /**
@@ -17,6 +35,8 @@ interface SafePageContainerProps {
 export function SafePageContainer({
   children,
   background,
+  footerContent,
+  footerOptions,
 }: SafePageContainerProps) {
   return (
     <Content
@@ -30,8 +50,12 @@ export function SafePageContainer({
         boxSizing: 'border-box',
         background: background || 'transparent',
       }}
+      onDoubleClick={footerOptions?.onDoubleClick}
     >
       {children}
+      {footerContent && (
+        <StyledFooter {...footerOptions}>{footerContent}</StyledFooter>
+      )}
     </Content>
   );
 }

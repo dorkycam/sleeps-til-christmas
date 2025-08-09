@@ -32,6 +32,7 @@ export interface Holiday {
   name: string; // Display name of the holiday
   theme: HolidayTheme; // Visual theme for colors and particles
   iconName: IconName; // Icon identifier with type safety
+  spotifyLinks?: string[]; // Optional Spotify playlist links
 }
 
 interface HolidayCountdownProps {
