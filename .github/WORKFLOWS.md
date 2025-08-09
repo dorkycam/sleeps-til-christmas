@@ -43,11 +43,6 @@ This repository uses GitHub Actions for automated testing, building, and deploym
   - ⚠️ Fails on high/critical security issues
   - 🔧 Yarn installation and caching
 
-### 3. Dependabot (`dependabot.yml`)
-
-**Trigger:** Weekly (Mondays 9am EST)  
-**Purpose:** Automated dependency updates
-
 **Updates:**
 
 - 📦 yarn packages (weekly)
