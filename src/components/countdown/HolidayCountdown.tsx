@@ -39,7 +39,7 @@ interface HolidayCountdownProps {
  * Tracks the current countdown state and loading status
  */
 interface CountdownState {
-  daysUntil: number; // Number of days until holiday
+  sleepsUntil: number; // Number of sleeps until holiday
   isHoliday: boolean; // Whether today is the holiday
   isLoaded: boolean; // Whether countdown has been calculated
 }
@@ -50,7 +50,7 @@ interface CountdownState {
  */
 function CountdownInner({ holiday }: HolidayCountdownProps) {
   const [countdown, setCountdown] = useState<CountdownState>({
-    daysUntil: 0,
+    sleepsUntil: 0,
     isHoliday: false,
     isLoaded: false,
   });
@@ -60,10 +60,10 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
      * Updates countdown using centralized calculation logic
      */
     const updateCountdown = () => {
-      const { daysUntil, isToday } = calculateHolidayCountdown(holiday);
+      const { sleepsUntil, isToday } = calculateHolidayCountdown(holiday);
 
       setCountdown({
-        daysUntil,
+        sleepsUntil,
         isHoliday: isToday,
         isLoaded: true,
       });
@@ -119,10 +119,10 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
   return (
     <Container vertical align="center" justify="center" gap={0}>
       <CountdownNumberLarge level={1} style={{ color: colors.text }}>
-        {countdown.daysUntil}
+        {countdown.sleepsUntil}
       </CountdownNumberLarge>
       <CountdownLabel level={2} style={{ color: colors.text }}>
-        sleep{countdown.daysUntil !== 1 ? 's' : ''} 'til {holiday.name}
+        sleep{countdown.sleepsUntil !== 1 ? 's' : ''} 'til {holiday.name}
       </CountdownLabel>
     </Container>
   );

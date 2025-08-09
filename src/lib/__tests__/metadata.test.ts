@@ -4,15 +4,15 @@ import { Holiday } from '@/components/countdown/HolidayCountdown';
 // Mock the countdown utilities
 jest.mock('../utils/countdown', () => ({
   calculateHolidayCountdown: jest.fn(() => ({
-    daysUntil: 139,
+    sleepsUntil: 139,
     isToday: false,
     targetDate: null,
   })),
   getHolidayDescription: jest.fn(
     () =>
-      '139 days until Christmas! Track the countdown and get ready to celebrate.',
+      '139 sleeps until Christmas! Track the countdown and get ready to celebrate.',
   ),
-  formatCountdownTitle: jest.fn(() => '139 Days Until Christmas'),
+  formatCountdownTitle: jest.fn(() => '139 Sleeps Until Christmas'),
 }));
 
 const mockChristmas: Holiday = {
@@ -41,15 +41,15 @@ describe('metadata generation', () => {
       const metadata = generateHolidayMetadata(mockChristmas);
 
       expect(metadata.title).toBe(
-        "139 Days Until Christmas | Sleeps 'til Christmas",
+        "139 Sleeps Until Christmas | Sleeps 'til Christmas",
       );
       expect(metadata.description).toBe(
-        '139 days until Christmas! Track the countdown and get ready to celebrate.',
+        '139 sleeps until Christmas! Track the countdown and get ready to celebrate.',
       );
 
       // Check Open Graph
       expect(metadata.openGraph?.title).toBe(
-        "139 Days Until Christmas | Sleeps 'til Christmas",
+        "139 Sleeps Until Christmas | Sleeps 'til Christmas",
       );
       expect(metadata.openGraph?.url).toBe('https://sleepstilchristmas.com');
       expect(metadata.openGraph?.siteName).toBe("Sleeps 'til Christmas");
@@ -57,17 +57,17 @@ describe('metadata generation', () => {
       // Check social image
       expect(metadata.openGraph?.images).toEqual([
         {
-          url: '/api/og?holiday=christmas&days=139',
+          url: '/api/og?holiday=christmas&sleeps=139',
           width: 1200,
           height: 630,
-          alt: '139 days until Christmas',
+          alt: '139 sleeps until Christmas',
         },
       ]);
 
       // Check Twitter card
       expect(metadata.twitter?.card).toBe('summary_large_image');
       expect(metadata.twitter?.images).toEqual([
-        '/api/og?holiday=christmas&days=139',
+        '/api/og?holiday=christmas&sleeps=139',
       ]);
 
       // Check theme color
@@ -96,10 +96,10 @@ describe('metadata generation', () => {
       // Check social image URL
       expect(metadata.openGraph?.images).toEqual([
         {
-          url: '/api/og?holiday=halloween&days=139',
+          url: '/api/og?holiday=halloween&sleeps=139',
           width: 1200,
           height: 630,
-          alt: '139 days until Halloween',
+          alt: '139 sleeps until Halloween',
         },
       ]);
     });
@@ -109,7 +109,7 @@ describe('metadata generation', () => {
 
       const expectedKeywords = [
         'holiday countdown',
-        'days until',
+        'sleeps until',
         'sleeps until',
         'christmas',
         'christmas countdown',
@@ -189,7 +189,7 @@ describe('metadata generation', () => {
 
       // Test when it's the holiday (0 days)
       calculateHolidayCountdown.mockReturnValueOnce({
-        daysUntil: 0,
+        sleepsUntil: 0,
         isToday: true,
         targetDate: null,
       });
@@ -218,7 +218,7 @@ describe('metadata generation', () => {
       const metadata = generateHolidayMetadata(mockChristmas);
       const imageUrl = metadata.openGraph?.images?.[0];
 
-      expect(imageUrl?.url).toBe('/api/og?holiday=christmas&days=139');
+      expect(imageUrl?.url).toBe('/api/og?holiday=christmas&sleeps=139');
       expect(imageUrl?.width).toBe(1200);
       expect(imageUrl?.height).toBe(630);
     });

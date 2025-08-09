@@ -12,7 +12,7 @@ interface StructuredDataProps {
  * rich snippets in search results.
  */
 export function StructuredData({ holiday }: StructuredDataProps) {
-  const { daysUntil } = calculateHolidayCountdown(holiday);
+  const { sleepsUntil } = calculateHolidayCountdown(holiday);
   const baseUrl = 'https://sleepstilchristmas.com';
   const pageUrl =
     holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`;
@@ -20,8 +20,8 @@ export function StructuredData({ holiday }: StructuredDataProps) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: `${daysUntil} Days Until ${holiday.name}`,
-    description: `Track the countdown to ${holiday.name}. ${daysUntil} days remaining until the celebration!`,
+    name: `${sleepsUntil} Sleeps Until ${holiday.name}`,
+    description: `Track the countdown to ${holiday.name}. ${sleepsUntil} sleeps remaining until the celebration!`,
     url: pageUrl,
     mainEntity: {
       '@type': 'Event',

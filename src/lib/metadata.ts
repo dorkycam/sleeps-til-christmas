@@ -16,7 +16,7 @@ const baseUrl = 'https://sleepstilchristmas.com';
  * that include the current countdown and holiday-specific theming.
  */
 export function generateHolidayMetadata(holiday: Holiday): Metadata {
-  const { daysUntil } = calculateHolidayCountdown(holiday);
+  const { sleepsUntil } = calculateHolidayCountdown(holiday);
   const description = getHolidayDescription(holiday);
   const title = formatCountdownTitle(holiday);
   const colors = holidayThemes[holiday.theme];
@@ -26,7 +26,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
   // Keywords for SEO
   const keywords = [
     'holiday countdown',
-    'days until',
+    'sleeps until',
     'sleeps until',
     holiday.name.toLowerCase(),
     'christmas countdown',
@@ -52,10 +52,10 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       // Dynamic social card image (we'll create this)
       images: [
         {
-          url: `/api/og?holiday=${holiday.slug}&days=${daysUntil}`,
+          url: `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}`,
           width: 1200,
           height: 630,
-          alt: `${daysUntil} days until ${holiday.name}`,
+          alt: `${sleepsUntil} sleeps until ${holiday.name}`,
         },
       ],
     },
@@ -65,7 +65,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       card: 'summary_large_image',
       title: fullTitle,
       description,
-      images: [`/api/og?holiday=${holiday.slug}&days=${daysUntil}`],
+      images: [`/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}`],
     },
 
     // Additional SEO tags

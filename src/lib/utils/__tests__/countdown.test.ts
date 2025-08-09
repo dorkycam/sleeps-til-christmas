@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import {
   calculateHolidayCountdown,
   getDaysUntilHoliday,
+  getSleepsUntilHoliday,
   getHolidayDescription,
   formatCountdownTitle,
 } from '../countdown';
@@ -48,23 +49,23 @@ describe('countdown utilities', () => {
   });
 
   describe('calculateHolidayCountdown', () => {
-    it('calculates correct days until Christmas from August 8', () => {
+    it('calculates correct sleeps until Christmas from August 8', () => {
       const result = calculateHolidayCountdown(mockChristmas);
 
-      expect(result.daysUntil).toBe(139);
+      expect(result.sleepsUntil).toBe(139);
       expect(result.isToday).toBe(false);
       expect(result.targetDate.format('YYYY-MM-DD')).toBe('2024-12-25');
     });
 
-    it('calculates correct days until Halloween from August 8', () => {
+    it('calculates correct sleeps until Halloween from August 8', () => {
       const result = calculateHolidayCountdown(mockHalloween);
 
-      expect(result.daysUntil).toBe(84);
+      expect(result.sleepsUntil).toBe(84);
       expect(result.isToday).toBe(false);
       expect(result.targetDate.format('YYYY-MM-DD')).toBe('2024-10-31');
     });
 
-    it('returns 0 days and isToday=true when today is the holiday', () => {
+    it('returns 0 sleeps and isToday=true when today is the holiday', () => {
       // Mock current date to be Christmas day
       const mockedDayjs = dayjs as jest.MockedFunction<typeof dayjs>;
       mockedDayjs.mockImplementation(() =>
@@ -73,7 +74,7 @@ describe('countdown utilities', () => {
 
       const result = calculateHolidayCountdown(mockChristmas);
 
-      expect(result.daysUntil).toBe(0);
+      expect(result.sleepsUntil).toBe(0);
       expect(result.isToday).toBe(true);
     });
 
@@ -86,7 +87,7 @@ describe('countdown utilities', () => {
 
       const result = calculateHolidayCountdown(mockChristmas);
 
-      expect(result.daysUntil).toBe(360); // Days until Christmas 2025
+      expect(result.sleepsUntil).toBe(360); // Sleeps until Christmas 2025
       expect(result.isToday).toBe(false);
       expect(result.targetDate.format('YYYY-MM-DD')).toBe('2025-12-25');
     });
@@ -101,17 +102,25 @@ describe('countdown utilities', () => {
       const result = calculateHolidayCountdown(mockChristmas);
 
       // Feb 1 to Dec 25, 2024 (leap year) = 328 days
-      expect(result.daysUntil).toBe(328);
+      expect(result.sleepsUntil).toBe(328);
     });
   });
 
   describe('getDaysUntilHoliday (legacy function)', () => {
-    it('returns same result as calculateHolidayCountdown.daysUntil', () => {
+    it('returns same result as calculateHolidayCountdown.sleepsUntil', () => {
       const newResult = calculateHolidayCountdown(mockChristmas);
       const legacyResult = getDaysUntilHoliday(mockChristmas);
 
-      expect(legacyResult).toBe(newResult.daysUntil);
+      expect(legacyResult).toBe(newResult.sleepsUntil);
     });
+  });
+
+  describe('getSleepsUntilHoliday', () => {
+    it('returns same result as calculateHolidayCountdown.sleepsUntil', () => {
+      const newResult = calculateHolidayCountdown(mockChristmas);
+      const sleepsResult = getSleepsUntilHoliday(mockChristmas);
+
+      expect(sleepsResult).toBe(newResult.sleepsUntil);
   });
 
   describe('getHolidayDescription', () => {
@@ -119,7 +128,7 @@ describe('countdown utilities', () => {
       const description = getHolidayDescription(mockChristmas);
 
       expect(description).toBe(
-        '139 days until Christmas! Track the countdown and get ready to celebrate.',
+        '139 sleeps until Christmas! Track the countdown and get ready to celebrate.',
       );
     });
 
@@ -133,7 +142,7 @@ describe('countdown utilities', () => {
       const description = getHolidayDescription(mockChristmas);
 
       expect(description).toBe(
-        'Only 1 day left until Christmas! Merry Christmas!',
+        'Only 1 sleep left until Christmas! Merry Christmas!',
       );
     });
 
@@ -151,13 +160,13 @@ describe('countdown utilities', () => {
   });
 
   describe('formatCountdownTitle', () => {
-    it('formats title correctly for multiple days', () => {
+    it('formats title correctly for multiple sleeps', () => {
       const title = formatCountdownTitle(mockChristmas);
 
-      expect(title).toBe('139 Days Until Christmas');
+      expect(title).toBe('139 Sleeps Until Christmas');
     });
 
-    it('formats title correctly for 1 day', () => {
+    it('formats title correctly for 1 sleep', () => {
       // Mock to be Dec 24 (1 day before Christmas)
       const mockedDayjs = dayjs as jest.MockedFunction<typeof dayjs>;
       mockedDayjs.mockImplementation(() =>
@@ -166,7 +175,7 @@ describe('countdown utilities', () => {
 
       const title = formatCountdownTitle(mockChristmas);
 
-      expect(title).toBe('1 Day Until Christmas');
+      expect(title).toBe('1 Sleep Until Christmas');
     });
 
     it('formats title correctly for today', () => {
@@ -199,7 +208,7 @@ describe('countdown utilities', () => {
 
       const result = calculateHolidayCountdown(leapDayHoliday);
 
-      expect(result.daysUntil).toBe(28); // Feb 1 to Feb 29
+      expect(result.sleepsUntil).toBe(28); // Feb 1 to Feb 29
       expect(result.targetDate.format('YYYY-MM-DD')).toBe('2024-02-29');
     });
 
@@ -213,7 +222,7 @@ describe('countdown utilities', () => {
       const result = calculateHolidayCountdown(mockChristmas);
 
       expect(result.targetDate.format('YYYY-MM-DD')).toBe('2025-12-25');
-      expect(result.daysUntil).toBeGreaterThan(300); // Should be next year
+      expect(result.sleepsUntil).toBeGreaterThan(300); // Should be next year
     });
   });
 });

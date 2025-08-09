@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const holidaySlug = searchParams.get('holiday') || 'christmas';
-    const days = searchParams.get('days') || '0';
+    const sleeps =
+      searchParams.get('sleeps') || searchParams.get('days') || '0'; // Support both for backward compatibility
 
     const holiday = getHolidayBySlug(holidaySlug);
     if (!holiday) {
@@ -17,18 +18,18 @@ export async function GET(request: NextRequest) {
     }
 
     const colors = holidayThemes[holiday.theme];
-    const daysNumber = parseInt(days, 10);
+    const sleepsNumber = parseInt(sleeps, 10);
 
     // Dynamic text based on countdown
     const countdownText =
-      daysNumber === 0
+      sleepsNumber === 0
         ? 'Today!'
-        : daysNumber === 1
+        : sleepsNumber === 1
           ? '1 Sleep Left'
-          : `${daysNumber} Sleeps`;
+          : `${sleepsNumber} Sleeps`;
 
     const mainText =
-      daysNumber === 0
+      sleepsNumber === 0
         ? `Today is ${holiday.name}!`
         : `${countdownText} Until ${holiday.name}`;
 
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
           {/* Main countdown number */}
           <div
             style={{
-              fontSize: daysNumber > 99 ? '120px' : '180px',
+              fontSize: sleepsNumber > 99 ? '120px' : '180px',
               fontWeight: 900,
               color: colors.text,
               lineHeight: 1,
@@ -57,7 +58,7 @@ export async function GET(request: NextRequest) {
               textShadow: '4px 4px 8px rgba(0, 0, 0, 0.3)',
             }}
           >
-            {daysNumber === 0 ? '🎉' : daysNumber}
+            {sleepsNumber === 0 ? '🎉' : sleepsNumber}
           </div>
 
           {/* Main text */}
@@ -86,7 +87,7 @@ export async function GET(request: NextRequest) {
               maxWidth: '800px',
             }}
           >
-            {daysNumber === 0
+            {sleepsNumber === 0
               ? holiday.message
               : 'Track the countdown at sleepstilchristmas.com'}
           </div>

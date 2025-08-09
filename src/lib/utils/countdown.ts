@@ -2,19 +2,19 @@ import dayjs from 'dayjs';
 import { Holiday } from '@/components/countdown/HolidayCountdown';
 
 export interface CountdownResult {
-  daysUntil: number;
+  sleepsUntil: number;
   isToday: boolean;
   targetDate: dayjs.Dayjs;
 }
 
 /**
- * Calculate days remaining until a holiday
+ * Calculate sleeps remaining until a holiday
  *
  * This is the single source of truth for all countdown calculations
  * used across the entire application (metadata, components, etc.)
  *
  * @param holiday - Holiday object with month and day
- * @returns CountdownResult with days remaining and additional info
+ * @returns CountdownResult with sleeps remaining and additional info
  */
 export function calculateHolidayCountdown(holiday: Holiday): CountdownResult {
   const today = dayjs().startOf('day'); // Start of current day
@@ -35,11 +35,11 @@ export function calculateHolidayCountdown(holiday: Holiday): CountdownResult {
     targetDate = targetDate.add(1, 'year');
   }
 
-  // Calculate exact days until the holiday
-  const daysUntil = isToday ? 0 : targetDate.diff(today, 'day');
+  // Calculate exact sleeps until the holiday
+  const sleepsUntil = isToday ? 0 : targetDate.diff(today, 'day');
 
   return {
-    daysUntil: Math.max(0, daysUntil),
+    sleepsUntil: Math.max(0, sleepsUntil),
     isToday,
     targetDate,
   };
@@ -50,7 +50,16 @@ export function calculateHolidayCountdown(holiday: Holiday): CountdownResult {
  * @deprecated Use calculateHolidayCountdown instead
  */
 export function getDaysUntilHoliday(holiday: Holiday): number {
-  return calculateHolidayCountdown(holiday).daysUntil;
+  return calculateHolidayCountdown(holiday).sleepsUntil;
+}
+
+/**
+ * Get sleeps until holiday - preferred function name
+ * @param holiday - Holiday object
+ * @returns Number of sleeps until the holiday
+ */
+export function getSleepsUntilHoliday(holiday: Holiday): number {
+  return calculateHolidayCountdown(holiday).sleepsUntil;
 }
 
 /**
@@ -60,14 +69,14 @@ export function getDaysUntilHoliday(holiday: Holiday): number {
  * @returns SEO description with countdown
  */
 export function getHolidayDescription(holiday: Holiday): string {
-  const { daysUntil, isToday } = calculateHolidayCountdown(holiday);
+  const { sleepsUntil, isToday } = calculateHolidayCountdown(holiday);
 
   if (isToday) {
     return `Today is ${holiday.name}! ${holiday.message}`;
-  } else if (daysUntil === 1) {
-    return `Only 1 day left until ${holiday.name}! ${holiday.message}`;
+  } else if (sleepsUntil === 1) {
+    return `Only 1 sleep left until ${holiday.name}! ${holiday.message}`;
   } else {
-    return `${daysUntil} days until ${holiday.name}! Track the countdown and get ready to celebrate.`;
+    return `${sleepsUntil} sleeps until ${holiday.name}! Track the countdown and get ready to celebrate.`;
   }
 }
 
@@ -78,13 +87,13 @@ export function getHolidayDescription(holiday: Holiday): string {
  * @returns Formatted title text
  */
 export function formatCountdownTitle(holiday: Holiday): string {
-  const { daysUntil, isToday } = calculateHolidayCountdown(holiday);
+  const { sleepsUntil, isToday } = calculateHolidayCountdown(holiday);
 
   if (isToday) {
     return `Today is ${holiday.name}!`;
-  } else if (daysUntil === 1) {
-    return `1 Day Until ${holiday.name}`;
+  } else if (sleepsUntil === 1) {
+    return `1 Sleep Until ${holiday.name}`;
   } else {
-    return `${daysUntil} Days Until ${holiday.name}`;
+    return `${sleepsUntil} Sleeps Until ${holiday.name}`;
   }
 }
