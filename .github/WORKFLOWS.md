@@ -7,32 +7,27 @@ This repository uses GitHub Actions for automated testing, building, and deploym
 ### 1. Production Deployment (`deploy-production.yml`)
 
 **Trigger:** Push to `main` branch  
-**Purpose:** Deploy to production after running full test suite
+**Purpose:** Deploy to production after linting and building
 
 **Steps:**
 
-1. **Test Job:**
+1. **Deploy Job:**
    - ✅ Lint code (`yarn lint`)
-   - 🧪 Run test suite (`yarn test`)
-   - 🏗️ Build verification (`yarn build`)
-
-2. **Deploy Job:** (only runs if tests pass)
-   - 🏗️ Build application
+   - 🏗️ Build application (`yarn build`)
    - ☁️ Configure AWS credentials
    - 🚀 Deploy to AWS Elastic Beanstalk
 
-**Safety:** Deployment is **blocked** if any tests fail!
+**Safety:** Deployment is **blocked** if linting or build fails!
 
 ### 2. Continuous Integration (`ci.yml`)
 
 **Trigger:** Push to `develop` branch or PRs to `develop`/`main`  
-**Purpose:** Run comprehensive testing and quality checks
+**Purpose:** Run linting, building and quality checks
 
 **Jobs:**
 
-- **Test & Build:**
-  - 🧪 Run tests with coverage on Node.js 18.x & 20.x
-  - 📊 Upload coverage to Codecov
+- **Lint & Build:**
+  - ✅ Lint code on Node.js 18.x & 20.x
   - 🏗️ Build verification
   - 📦 Bundle size check
 
@@ -103,17 +98,15 @@ The README shows real-time status:
    ```bash
    git checkout main
    git merge develop
-   git push origin main  # Triggers deployment after tests
+   git push origin main  # Triggers deployment after linting and build
    ```
 
 ## 🔧 Local Testing Commands
 
 ```bash
-yarn test              # Run tests
-yarn test:watch        # Run tests in watch mode
-yarn test:coverage     # Run tests with coverage
 yarn lint              # Run linting
 yarn build             # Build application
+yarn dev               # Start development server
 ```
 
 ## 🚨 Troubleshooting
@@ -122,7 +115,7 @@ yarn build             # Build application
 
 1. Check GitHub Actions tab for error details
 2. Common issues:
-   - Test failures → Fix tests and push again
+   - Linting failures → Fix code style issues and push again
    - Build errors → Check build locally with `yarn build`
    - AWS credentials → Verify secrets are set correctly
 
@@ -132,7 +125,7 @@ yarn build             # Build application
 2. Run the same command locally to debug
 3. Common fixes:
    - `yarn lint` for linting issues
-   - `yarn test` for test failures
+   - `yarn build` for build failures
    - `yarn tsc --noEmit` for TypeScript errors
 
 The workflows ensure code quality and prevent broken deployments! 🎉
