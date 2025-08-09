@@ -1,3 +1,10 @@
+# Sleeps 'til Christmas 🎄
+
+[![CI](https://github.com/dorkycam/sleeps-til-christmas/actions/workflows/ci.yml/badge.svg)](https://github.com/dorkycam/sleeps-til-christmas/actions/workflows/ci.yml)
+[![Deploy to Production](https://github.com/dorkycam/sleeps-til-christmas/actions/workflows/deploy-production.yml/badge.svg)](https://github.com/dorkycam/sleeps-til-christmas/actions/workflows/deploy-production.yml)
+
+A delightful holiday countdown website built with Next.js. Track the days until Christmas, Halloween, Valentine's Day, and more!
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
