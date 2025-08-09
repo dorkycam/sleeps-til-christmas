@@ -34,9 +34,9 @@ export const HolidayPage = memo(function HolidayPage({
   const [spotifyVisibility, setSpotifyVisibility] =
     useState<SpotifyVisibilityState>(SpotifyVisibilityState.Wide);
 
-  const handleFooterDoubleClick = useCallback(() => {
+  const handleDoubleClick = useCallback(() => {
     setSpotifyVisibility(prev =>
-      prev === SpotifyVisibilityState.Hidden ? prev - 2 : prev + 1,
+      prev === SpotifyVisibilityState.Hidden ? 0 : prev + 1,
     );
   }, []);
 
@@ -58,7 +58,7 @@ export const HolidayPage = memo(function HolidayPage({
       <SafePageContainer
         background={holidayThemes[theme].background}
         footerContent={footerContent}
-        footerOptions={{ onDoubleClick: handleFooterDoubleClick }}
+        onDoubleClick={handleDoubleClick}
       >
         <ParticleBackground theme={theme} />
         <HolidayCountdown holiday={holiday} />

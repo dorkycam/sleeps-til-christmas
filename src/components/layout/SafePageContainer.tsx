@@ -10,7 +10,6 @@ const StyledFooter = styled(Footer)`
   background: transparent;
   bottom: 0;
   left: 0;
-  min-height: 70px;
   padding: 25px;
   position: fixed;
   right: 0;
@@ -21,9 +20,7 @@ interface SafePageContainerProps {
   children: ReactNode;
   background?: string;
   footerContent?: ReactNode;
-  footerOptions?: {
-    onDoubleClick?: () => void;
-  };
+  onDoubleClick?: () => void;
 }
 
 /**
@@ -36,7 +33,7 @@ export function SafePageContainer({
   children,
   background,
   footerContent,
-  footerOptions,
+  onDoubleClick,
 }: SafePageContainerProps) {
   return (
     <Content
@@ -50,12 +47,10 @@ export function SafePageContainer({
         boxSizing: 'border-box',
         background: background || 'transparent',
       }}
-      onDoubleClick={footerOptions?.onDoubleClick}
+      onDoubleClick={onDoubleClick}
     >
       {children}
-      {footerContent && (
-        <StyledFooter {...footerOptions}>{footerContent}</StyledFooter>
-      )}
+      {footerContent && <StyledFooter>{footerContent}</StyledFooter>}
     </Content>
   );
 }
