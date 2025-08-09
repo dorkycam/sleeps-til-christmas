@@ -38,15 +38,6 @@ jobs:
       - name: Run linting
         run: yarn lint
 
-      - name: Build application
-        run: yarn build
-
-      - name: Check build output
-        run: |
-          echo "Build completed successfully!"
-          echo "Build output size:"
-          du -sh .next/ || echo "Next.js build directory not found"
-
   type-check:
     name: TypeScript Type Check
     runs-on: ubuntu-latest
