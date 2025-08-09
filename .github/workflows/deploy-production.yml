@@ -17,6 +17,16 @@ jobs:
       url: ${{ steps.deploy.outputs.environment_url }}
 
     steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Install AWS EB CLI
+        run: pip install awsebcli --upgrade --user
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -37,29 +47,7 @@ jobs:
         run: yarn lint
 
       - name: Build application
-        run: yarn build
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install AWS EB CLI
-        run: pip install awsebcli --upgrade
+        run: yarn build --if-present
 
       - name: Deploy to production
-        id: deploy
-        run: |
-          yarn deploy
-          echo "environment_url=https://your-app-url.com" >> $GITHUB_OUTPUT
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: us-east-1
+        run: npm run deploy

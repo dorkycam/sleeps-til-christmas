@@ -53,10 +53,10 @@ interface CountdownState {
  * Separated to ensure proper client-side rendering and hydration safety
  */
 function CountdownInner({ holiday }: HolidayCountdownProps) {
-  const [countdown, setCountdown] = useState<CountdownState>({
-    sleepsUntil: 0,
-    isHoliday: false,
-    isLoaded: false,
+  const [countdown, setCountdown] = useState<CountdownState>(() => {
+    const { sleepsUntil, isToday: isHoliday } =
+      calculateHolidayCountdown(holiday);
+    return { sleepsUntil, isHoliday, isLoaded: true };
   });
 
   useEffect(() => {
