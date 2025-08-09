@@ -1,5 +1,9 @@
 import { Holiday } from '@/components/countdown/HolidayCountdown';
-import { calculateHolidayCountdown } from '@/lib/utils/countdown';
+import {
+  formatCountdownTitle,
+  getCountdownLabel,
+  getCountdownNumber,
+} from '@/lib/utils/countdown';
 
 interface StructuredDataProps {
   holiday: Holiday;
@@ -12,7 +16,9 @@ interface StructuredDataProps {
  * rich snippets in search results.
  */
 export function StructuredData({ holiday }: StructuredDataProps) {
-  const { sleepsUntil } = calculateHolidayCountdown(holiday);
+  const countdownNumber = getCountdownNumber(holiday);
+  const countdownLabel = getCountdownLabel(holiday);
+  const title = formatCountdownTitle(holiday);
   const baseUrl = 'https://sleepstilchristmas.com';
   const pageUrl =
     holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`;
@@ -20,8 +26,8 @@ export function StructuredData({ holiday }: StructuredDataProps) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: `${sleepsUntil} sleeps 'til ${holiday.name}`,
-    description: `Track the countdown to ${holiday.name}. ${sleepsUntil} sleeps remaining until the celebration!`,
+    name: title,
+    description: `Track the countdown to ${holiday.name}. ${countdownNumber} ${countdownLabel}!`,
     url: pageUrl,
     mainEntity: {
       '@type': 'Event',

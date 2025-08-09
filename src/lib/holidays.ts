@@ -94,8 +94,12 @@ export type GetHoliday<T extends HolidaySlug> = (typeof holidays)[T];
 // Re-export countdown utilities for backward compatibility
 export {
   calculateHolidayCountdown,
-  getDaysUntilHoliday,
-  getSleepsUntilHoliday,
-  getHolidayDescription,
   formatCountdownTitle,
+  getCelebrationMessage,
+  getCountdownLabel,
+  getCountdownNumber,
+  getDaysUntilHoliday,
+  getHolidayDescription,
+  getSleepsUntilHoliday,
+  isHolidayToday,
 } from '@/lib/utils/countdown';

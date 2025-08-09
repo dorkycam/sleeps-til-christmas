@@ -94,6 +94,56 @@ export function formatCountdownTitle(holiday: Holiday): string {
   } else if (sleepsUntil === 1) {
     return `1 Sleep Until ${holiday.name}`;
   } else {
-    return `${sleepsUntil} sleeps 'til ${holiday.name}`;
+    return `${sleepsUntil} Sleeps 'til ${holiday.name}`;
   }
+}
+
+/**
+ * Get the countdown number to display
+ *
+ * @param holiday - Holiday object
+ * @returns Number to display (0 if today, or sleeps remaining)
+ */
+export function getCountdownNumber(holiday: Holiday): number {
+  const { sleepsUntil } = calculateHolidayCountdown(holiday);
+  return sleepsUntil;
+}
+
+/**
+ * Get the countdown label with proper pluralization
+ *
+ * @param holiday - Holiday object
+ * @returns Label text with proper pluralization
+ */
+export function getCountdownLabel(holiday: Holiday): string {
+  const { sleepsUntil, isToday } = calculateHolidayCountdown(holiday);
+
+  if (isToday) {
+    return `Happy ${holiday.name}!`;
+  } else if (sleepsUntil === 1) {
+    return `sleep 'til ${holiday.name}`;
+  } else {
+    return `sleeps 'til ${holiday.name}`;
+  }
+}
+
+/**
+ * Get the celebration message for when it's the holiday
+ *
+ * @param holiday - Holiday object
+ * @returns Holiday message or empty string if not today
+ */
+export function getCelebrationMessage(holiday: Holiday): string {
+  const { isToday } = calculateHolidayCountdown(holiday);
+  return isToday ? holiday.message : '';
+}
+
+/**
+ * Check if today is the holiday
+ *
+ * @param holiday - Holiday object
+ * @returns true if today is the holiday
+ */
+export function isHolidayToday(holiday: Holiday): boolean {
+  return calculateHolidayCountdown(holiday).isToday;
 }

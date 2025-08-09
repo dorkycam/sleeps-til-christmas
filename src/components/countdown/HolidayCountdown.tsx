@@ -2,7 +2,11 @@
 
 import { HolidayTheme, holidayThemes } from '@/lib/themes/tokens';
 // Removed ClientOnly - using proper SSR handling with useState/useEffect
-import { calculateHolidayCountdown } from '@/lib/utils/countdown';
+import {
+  calculateHolidayCountdown,
+  getCountdownLabel,
+  getCountdownNumber,
+} from '@/lib/utils/countdown';
 import dayjs from 'dayjs';
 import { memo, useEffect, useState } from 'react';
 import {
@@ -115,14 +119,17 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
     );
   }
 
-  // Show countdown with proper singular/plural handling
+  // Show countdown with proper singular/plural handling using helper function
+  const countdownNumber = getCountdownNumber(holiday);
+  const countdownLabel = getCountdownLabel(holiday);
+
   return (
     <Container vertical align="center" justify="center" gap={0}>
       <CountdownNumberLarge level={1} style={{ color: colors.text }}>
-        {countdown.sleepsUntil}
+        {countdownNumber}
       </CountdownNumberLarge>
       <CountdownLabel level={2} style={{ color: colors.text }}>
-        sleep{countdown.sleepsUntil !== 1 ? 's' : ''} &apos;til {holiday.name}
+        {countdownLabel}
       </CountdownLabel>
     </Container>
   );
