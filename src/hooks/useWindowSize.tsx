@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useClientOnly } from '@/lib/utils/client-only';
 
 interface WindowSize {
   width: number | undefined;
@@ -6,33 +7,31 @@ interface WindowSize {
 }
 
 export function useWindowSize() {
-  // Initialize state with undefined width/height so server and client renders match
-  // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
+  const isClient = useClientOnly();
   const [windowSize, setWindowSize] = useState<WindowSize>({
     width: undefined,
     height: undefined,
   });
 
   useEffect(() => {
-    // only execute all the code below in client side
-    // Handler to call on window resize
+    if (!isClient) return;
+
     function handleResize() {
-      // Set window width/height to state
       setWindowSize({
         width: window.innerWidth,
         height: window.innerHeight,
       });
     }
 
+    // Set initial size
+    handleResize();
+
     // Add event listener
     window.addEventListener('resize', handleResize);
 
-    // Call handler right away so state gets updated with initial window size
-    handleResize();
-
     // Remove event listener on cleanup
     return () => window.removeEventListener('resize', handleResize);
-  }, []); // Empty array ensures that effect is only run on mount
+  }, [isClient]);
 
   return useMemo(() => windowSize, [windowSize]);
 }
