@@ -12,9 +12,9 @@ This repository uses GitHub Actions for automated testing, building, and deploym
 **Steps:**
 
 1. **Test Job:**
-   - ✅ Lint code (`npm run lint`)
-   - 🧪 Run test suite (`npm test`)
-   - 🏗️ Build verification (`npm run build`)
+   - ✅ Lint code (`yarn lint`)
+   - 🧪 Run test suite (`yarn test`)
+   - 🏗️ Build verification (`yarn build`)
 
 2. **Deploy Job:** (only runs if tests pass)
    - 🏗️ Build application
@@ -40,7 +40,7 @@ This repository uses GitHub Actions for automated testing, building, and deploym
   - 📝 TypeScript type validation
 
 - **Security:**
-  - 🔒 npm audit for vulnerabilities
+  - 🔒 yarn audit for vulnerabilities
   - ⚠️ Fails on high/critical security issues
 
 ### 3. Dependabot (`dependabot.yml`)
@@ -50,7 +50,7 @@ This repository uses GitHub Actions for automated testing, building, and deploym
 
 **Updates:**
 
-- 📦 npm packages (weekly)
+- 📦 yarn packages (weekly)
 - ⚙️ GitHub Actions (weekly)
 - 🏷️ Auto-labels PRs as "dependencies" or "github-actions"
 
@@ -109,11 +109,11 @@ The README shows real-time status:
 ## 🔧 Local Testing Commands
 
 ```bash
-npm test              # Run tests
-npm run test:watch    # Run tests in watch mode
-npm run test:coverage # Run tests with coverage
-npm run lint          # Run linting
-npm run build         # Build application
+yarn test              # Run tests
+yarn test:watch        # Run tests in watch mode
+yarn test:coverage     # Run tests with coverage
+yarn lint              # Run linting
+yarn build             # Build application
 ```
 
 ## 🚨 Troubleshooting
@@ -123,7 +123,7 @@ npm run build         # Build application
 1. Check GitHub Actions tab for error details
 2. Common issues:
    - Test failures → Fix tests and push again
-   - Build errors → Check build locally with `npm run build`
+   - Build errors → Check build locally with `yarn build`
    - AWS credentials → Verify secrets are set correctly
 
 **If CI fails:**
@@ -131,8 +131,8 @@ npm run build         # Build application
 1. Check the specific job that failed
 2. Run the same command locally to debug
 3. Common fixes:
-   - `npm run lint` for linting issues
-   - `npm test` for test failures
-   - `npx tsc --noEmit` for TypeScript errors
+   - `yarn lint` for linting issues
+   - `yarn test` for test failures
+   - `yarn tsc --noEmit` for TypeScript errors
 
 The workflows ensure code quality and prevent broken deployments! 🎉
