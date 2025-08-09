@@ -67,7 +67,7 @@
   "editor.showDeprecated": true,
   "problems.decorations.enabled": true,
   "editor.renderLineHighlight": "all",
-  "editor.occurrencesHighlight": true,
+  "editor.occurrencesHighlight": "singleFile",
 
   // File associations for better syntax highlighting
   "files.associations": {

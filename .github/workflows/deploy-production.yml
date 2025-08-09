@@ -12,6 +12,10 @@ jobs:
     name: Deploy to AWS
     runs-on: ubuntu-latest
 
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.environment_url }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,6 +25,10 @@ jobs:
         with:
           node-version: '20.x'
           cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Install Yarn
+        run: npm install -g yarn
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -38,8 +46,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
       - name: Install AWS EB CLI
-        run: pip install awsebcli --upgrade --user
+        run: pip install awsebcli --upgrade
 
       - name: Deploy to production
-        run: yarn deploy
+        id: deploy
+        run: |
+          yarn deploy
+          echo "environment_url=https://your-app-url.com" >> $GITHUB_OUTPUT
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
