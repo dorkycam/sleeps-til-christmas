@@ -12,11 +12,9 @@ This repository uses GitHub Actions for automated testing, building, and deploym
 **Steps:**
 
 1. **Deploy Job:**
-   - 🔧 Install Yarn and dependencies
    - ✅ Lint code (`yarn lint`)
    - 🏗️ Build application (`yarn build`)
    - ☁️ Configure AWS credentials
-   - 🐍 Setup Python environment for AWS EB CLI
    - 🚀 Deploy to AWS Elastic Beanstalk
 
 **Safety:** Deployment is **blocked** if linting or build fails!
@@ -29,19 +27,21 @@ This repository uses GitHub Actions for automated testing, building, and deploym
 **Jobs:**
 
 - **Lint & Build:**
-  - ✅ Lint code on Node.js 23.x
+  - ✅ Lint code on Node.js 18.x & 20.x
   - 🏗️ Build verification
   - 📦 Bundle size check
-  - 🔧 Yarn installation and caching
 
 - **Type Check:**
   - 📝 TypeScript type validation
-  - 🔧 Yarn installation and caching
 
 - **Security:**
   - 🔒 yarn audit for vulnerabilities
   - ⚠️ Fails on high/critical security issues
-  - 🔧 Yarn installation and caching
+
+### 3. Dependabot (`dependabot.yml`)
+
+**Trigger:** Weekly (Mondays 9am EST)  
+**Purpose:** Automated dependency updates
 
 **Updates:**
 
@@ -60,7 +60,7 @@ This repository uses GitHub Actions for automated testing, building, and deploym
 
 ### For All PRs:
 
-1. ✅ Tests pass on Node.js 23.x
+1. ✅ Tests pass on Node.js 18.x & 20.x
 2. ✅ TypeScript compiles without errors
 3. ✅ Linting passes
 
