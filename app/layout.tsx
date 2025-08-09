@@ -1,17 +1,20 @@
 import '@/styles/globals.css';
 import { Metadata } from 'next';
 import StyledComponentsRegistry from '@/lib/registry';
+import AntdRegistry from '@/lib/antd-registry';
+import { ConfigProvider } from 'antd';
+import { defaultAntdTheme } from '@/styles/antdTheme';
 
 export const metadata: Metadata = {
   title: {
-    default: "Sleeps 'til Christmas",
     template: "%s | Sleeps 'til Christmas",
+    default: "Sleeps 'til Christmas",
   },
-  description: 'See how many sleeps are left until your favorite holiday!',
   viewport: 'width=device-width, initial-scale=1',
   icons: {
     icon: '/favicon.ico',
   },
+  metadataBase: new URL('https://sleepstilchristmas.com'),
 };
 
 export default function RootLayout({
@@ -24,7 +27,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        <AntdRegistry>
+          <ConfigProvider theme={defaultAntdTheme}>
+            <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+          </ConfigProvider>
+        </AntdRegistry>
       </body>
     </html>
   );

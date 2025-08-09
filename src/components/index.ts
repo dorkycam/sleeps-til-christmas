@@ -1,17 +1,21 @@
-// UI Components
-export * from './ui/Typography';
-export * from './ui/Container';
-export * from './ui/Button';
-
 // Layout Components
 export * from './layout/SafePageContainer';
 
-// Feature Components
-export * from './features/ParticleBackground';
-export * from './features/HolidayCountdown';
-export * from './features/HolidayPage';
-export * from './features/NotFoundPage';
+// Page Components
+export * from './pages/HolidayPage';
+export * from './pages/NotFoundPage';
+
+// Countdown Components
+export * from './countdown/HolidayCountdown';
+
+// Effect Components
+export * from './effects/ParticleBackground';
+
+// SEO Components
+export * from './seo/StructuredData';
 
 // Utils
 export * from '../lib/utils/client-only';
 export * from '../lib/themes/tokens';
+export * from '../lib/metadata';
+export * from '../styles/antdTheme';

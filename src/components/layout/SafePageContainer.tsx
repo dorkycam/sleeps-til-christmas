@@ -1,8 +1,7 @@
-'use client';
-
 import { ReactNode } from 'react';
-import { useClientOnly, useSafeWindow } from '@/lib/utils/client-only';
-import { PageWrapper } from '@/components/ui/Container';
+import { Layout } from 'antd';
+
+const { Content } = Layout;
 
 interface SafePageContainerProps {
   children: ReactNode;
@@ -10,27 +9,29 @@ interface SafePageContainerProps {
 }
 
 /**
- * A page container that safely handles window dimensions
- * and prevents hydration mismatches
+ * Simple page container following Next.js best practices
+ *
+ * Uses inline styles to avoid hydration mismatches with styled-components.
+ * Responsive design handled by CSS custom properties.
  */
 export function SafePageContainer({
   children,
   background,
 }: SafePageContainerProps) {
-  const isClient = useClientOnly();
-  const window = useSafeWindow();
-
-  // Use actual window height if available, otherwise fallback to 100vh
-  const height = isClient && window ? `${window.innerHeight}px` : '100vh';
-
   return (
-    <PageWrapper
-      height={height}
-      background={background}
-      position="relative"
-      overflow="hidden"
+    <Content
+      style={{
+        minHeight: '100vh',
+        height: '100vh',
+        width: '100%',
+        position: 'relative',
+        overflow: 'hidden',
+        padding: 'clamp(16px, 4vw, 32px)',
+        boxSizing: 'border-box',
+        background: background || 'transparent',
+      }}
     >
       {children}
-    </PageWrapper>
+    </Content>
   );
 }

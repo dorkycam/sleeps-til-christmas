@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Allow: /halloween
+Allow: /valentines-day
+
+# Disallow any potential admin or API routes
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://sleepstilchristmas.com/sitemap.xml

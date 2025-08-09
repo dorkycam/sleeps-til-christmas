@@ -3,20 +3,31 @@
 import { memo, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { ClientOnly } from '@/lib/utils/client-only';
-import { ContentOverlay } from '@/components/ui/Container';
-import { CountdownNumber, CountdownLabel } from '@/components/ui/Typography';
+import { calculateHolidayCountdown } from '@/lib/utils/countdown';
 import { HolidayTheme, holidayThemes } from '@/lib/themes/tokens';
+
+// Icon name types for better type safety
+export type IconName = 'home' | 'heart' | 'smile';
+import {
+  Container,
+  CountdownNumber,
+  CountdownNumberLarge,
+  CountdownLabel,
+  HolidayMessage,
+} from './CountdownStyles';
 
 /**
  * Holiday configuration interface
  * Defines all properties needed to display a holiday countdown
  */
 export interface Holiday {
+  slug: string; // URL-friendly identifier (e.g., 'christmas', 'valentines-day')
   month: number; // Holiday month (1-12)
   day: number; // Holiday day (1-31)
   message: string; // Message to show on the holiday
   name: string; // Display name of the holiday
   theme: HolidayTheme; // Visual theme for colors and particles
+  iconName: IconName; // Icon identifier with type safety
 }
 
 interface HolidayCountdownProps {
@@ -28,7 +39,7 @@ interface HolidayCountdownProps {
  * Tracks the current countdown state and loading status
  */
 interface CountdownState {
-  sleepsUntil: number; // Number of days until holiday
+  daysUntil: number; // Number of days until holiday
   isHoliday: boolean; // Whether today is the holiday
   isLoaded: boolean; // Whether countdown has been calculated
 }
@@ -39,45 +50,27 @@ interface CountdownState {
  */
 function CountdownInner({ holiday }: HolidayCountdownProps) {
   const [countdown, setCountdown] = useState<CountdownState>({
-    sleepsUntil: 0,
+    daysUntil: 0,
     isHoliday: false,
     isLoaded: false,
   });
 
   useEffect(() => {
     /**
-     * Calculates days until holiday
-     * Handles year rollover when holiday has passed this year
+     * Updates countdown using centralized calculation logic
      */
-    const calculateCountdown = () => {
-      const today = dayjs();
-      const currentYear = today.year();
-
-      // Create holiday dates for this year and next year
-      const holidayThisYear = dayjs(
-        `${currentYear}-${holiday.month.toString().padStart(2, '0')}-${holiday.day.toString().padStart(2, '0')}`,
-      );
-      const holidayNextYear = dayjs(
-        `${currentYear + 1}-${holiday.month.toString().padStart(2, '0')}-${holiday.day.toString().padStart(2, '0')}`,
-      );
-
-      // Check if holiday is in the future this year or if it's today
-      const isBeforeHoliday = today.isBefore(holidayThisYear, 'day');
-      const isTodayHoliday = today.isSame(holidayThisYear, 'day');
-
-      // Use this year's date if holiday hasn't passed, otherwise next year
-      const targetDate = isBeforeHoliday ? holidayThisYear : holidayNextYear;
-      const sleepsUntil = targetDate.diff(today, 'day') + 1;
+    const updateCountdown = () => {
+      const { daysUntil, isToday } = calculateHolidayCountdown(holiday);
 
       setCountdown({
-        sleepsUntil: Math.max(0, sleepsUntil), // Ensure non-negative
-        isHoliday: isTodayHoliday,
+        daysUntil,
+        isHoliday: isToday,
         isLoaded: true,
       });
     };
 
     // Calculate countdown immediately
-    calculateCountdown();
+    updateCountdown();
 
     // Schedule automatic updates at midnight
     const now = dayjs();
@@ -86,10 +79,10 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
 
     // Update once at midnight, then every 24 hours
     const timeout = setTimeout(() => {
-      calculateCountdown();
+      updateCountdown();
 
       // Set up daily interval after first midnight update
-      const interval = setInterval(calculateCountdown, 24 * 60 * 60 * 1000);
+      const interval = setInterval(updateCountdown, 24 * 60 * 60 * 1000);
 
       return () => clearInterval(interval);
     }, msUntilMidnight);
@@ -103,59 +96,35 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
   // Show loading state while calculating countdown
   if (!countdown.isLoaded) {
     return (
-      <ContentOverlay>
-        <CountdownNumber
-          color={colors.text}
-          align="center"
-          margin="0"
-          size="6xl"
-          responsive={{ md: '10xl' }}
-        >
+      <Container vertical align="center" justify="center">
+        <CountdownNumber level={1} style={{ color: colors.text }}>
           ...
         </CountdownNumber>
-      </ContentOverlay>
+      </Container>
     );
   }
 
   // Show holiday message if today is the holiday
   if (countdown.isHoliday) {
     return (
-      <ContentOverlay>
-        <CountdownNumber
-          color={colors.text}
-          align="center"
-          margin="0"
-          size="5xl"
-          responsive={{ md: '8xl' }}
-        >
+      <Container vertical align="center" justify="center">
+        <HolidayMessage level={1} style={{ color: colors.text }}>
           {holiday.message}
-        </CountdownNumber>
-      </ContentOverlay>
+        </HolidayMessage>
+      </Container>
     );
   }
 
   // Show countdown with proper singular/plural handling
   return (
-    <ContentOverlay>
-      <CountdownNumber
-        color={colors.text}
-        align="center"
-        margin="0"
-        size="6xl"
-        responsive={{ md: '10xl' }}
-      >
-        {countdown.sleepsUntil}
-      </CountdownNumber>
-      <CountdownLabel
-        color={colors.text}
-        align="center"
-        margin="0"
-        size="3xl"
-        responsive={{ md: '4xl' }}
-      >
-        sleep{countdown.sleepsUntil !== 1 ? 's' : ''} 'til {holiday.name}
+    <Container vertical align="center" justify="center" gap={0}>
+      <CountdownNumberLarge level={1} style={{ color: colors.text }}>
+        {countdown.daysUntil}
+      </CountdownNumberLarge>
+      <CountdownLabel level={2} style={{ color: colors.text }}>
+        sleep{countdown.daysUntil !== 1 ? 's' : ''} 'til {holiday.name}
       </CountdownLabel>
-    </ContentOverlay>
+    </Container>
   );
 }
 

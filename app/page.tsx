@@ -1,6 +1,13 @@
 import { HolidayPage } from '@/components';
-import { holidays } from '@/lib/holidays';
+import { getHolidayBySlugSafe } from '@/lib/holidays';
+import { generateHolidayMetadata } from '@/lib/metadata';
+
+export function generateMetadata() {
+  const holiday = getHolidayBySlugSafe('christmas');
+  return generateHolidayMetadata(holiday);
+}
 
 export default function Home() {
-  return <HolidayPage holiday={holidays.christmas} />;
+  const holiday = getHolidayBySlugSafe('christmas');
+  return <HolidayPage holiday={holiday} />;
 }
