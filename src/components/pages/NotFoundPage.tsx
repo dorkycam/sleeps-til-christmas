@@ -1,13 +1,13 @@
 'use client';
 
-import { Typography, Button, Flex, Space } from 'antd';
-import { HomeOutlined, HeartOutlined, SmileOutlined } from '@ant-design/icons';
-import Link from 'next/link';
-import styled from 'styled-components';
 import { SafePageContainer } from '@/components/layout/SafePageContainer';
 import { getAllHolidaySlugs, getHolidayBySlug } from '@/lib/holidays';
 import { holidayThemes } from '@/lib/themes/tokens';
 import { minTablet, minTabletLarge } from '@/styles/mediaQueries';
+import { HeartOutlined, HomeOutlined, SmileOutlined } from '@ant-design/icons';
+import { Button, Flex, Space, Typography } from 'antd';
+import Link from 'next/link';
+import styled from 'styled-components';
 
 const { Title, Text } = Typography;
 
@@ -72,7 +72,7 @@ const Description = styled(Text)`
   }
 `;
 
-const HolidayButton = styled(Button)<{ $theme: string; $isPrimary: boolean }>`
+const HolidayButton = styled(Button)<{ $theme: string }>`
   height: 40px !important;
   font-size: 14px !important;
   font-weight: 600 !important;
@@ -87,29 +87,22 @@ const HolidayButton = styled(Button)<{ $theme: string; $isPrimary: boolean }>`
     min-width: 180px !important;
   }
 
-  ${({ $theme, $isPrimary }) => {
+  ${({ $theme }) => {
     const colors = holidayThemes[$theme as keyof typeof holidayThemes];
-    if ($isPrimary) {
-      return `
-        background-color: ${colors.primary} !important;
-        border-color: ${colors.primary} !important;
-        color: ${colors.background === colors.primary ? colors.text : colors.background} !important;
+    const fontColor =
+      colors.background === colors.primary ? colors.text : colors.background;
+    const backgroundColor = colors.primary;
+
+    return `
+        background-color: ${backgroundColor} !important;
+        border-color: ${backgroundColor} !important;
+        color: ${fontColor} !important;
         &:hover {
-          background-color: ${colors.secondary} !important;
-          border-color: ${colors.secondary} !important;
+          background-color: ${fontColor} !important;
+        border-color: ${backgroundColor} !important;
+        color: ${backgroundColor} !important;
         }
       `;
-    } else {
-      return `
-        background-color: white !important;
-        border-color: ${colors.primary} !important;
-        color: ${colors.primary} !important;
-        &:hover {
-          background-color: ${colors.primary} !important;
-          color: white !important;
-        }
-      `;
-    }
   }}
 `;
 
@@ -156,10 +149,9 @@ export function NotFoundPage() {
               return (
                 <Link key={slug} href={href} style={{ textDecoration: 'none' }}>
                   <HolidayButton
-                    type={isChristmas ? 'primary' : 'default'}
+                    type="primary"
                     icon={<IconComponent />}
                     $theme={holiday.theme}
-                    $isPrimary={isChristmas}
                   >
                     {holiday.name.toLowerCase()}
                   </HolidayButton>

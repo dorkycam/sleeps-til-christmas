@@ -1,25 +1,24 @@
-import { notFound } from 'next/navigation';
 import { HolidayPage } from '@/components';
 import {
-  getHolidayBySlug,
   getAllHolidaySlugs,
+  getHolidayBySlug,
   isValidHolidaySlug,
 } from '@/lib/holidays';
 import { generateHolidayMetadata } from '@/lib/metadata';
+import { notFound } from 'next/navigation';
 
 interface HolidayPageProps {
-  params: {
-    slug: string;
-  };
+  params: Promise<{ slug: string }>;
 }
 
 /**
  * Generate metadata for dynamic holiday pages
  */
-export function generateMetadata({ params }: HolidayPageProps) {
-  const holiday = getHolidayBySlug(params.slug);
+export async function generateMetadata({ params }: HolidayPageProps) {
+  const { slug } = await params;
+  const holiday = getHolidayBySlug(slug);
 
-  if (!holiday || params.slug === 'christmas') {
+  if (!holiday || slug === 'christmas') {
     // Christmas is handled by the home page, redirect to 404 for /christmas
     notFound();
   }
@@ -45,13 +44,15 @@ export function generateStaticParams() {
  * Handles all holiday routes except Christmas (which is at /)
  * Uses the slug to determine which holiday to display
  */
-export default function DynamicHolidayPage({ params }: HolidayPageProps) {
+export default async function DynamicHolidayPage({ params }: HolidayPageProps) {
+  const { slug } = await params;
+
   // Validate the slug and get holiday data
-  if (!isValidHolidaySlug(params.slug) || params.slug === 'christmas') {
+  if (!isValidHolidaySlug(slug) || slug === 'christmas') {
     notFound();
   }
 
-  const holiday = getHolidayBySlug(params.slug)!;
+  const holiday = getHolidayBySlug(slug)!;
 
   return <HolidayPage holiday={holiday} />;
 }
