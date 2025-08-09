@@ -32,7 +32,7 @@ src/components/
 
 ### 🚫 Zero Hydration Errors
 
-- **ClientOnly wrapper**: Prevents server/client mismatches
+- **SSR-safe patterns**: Uses 'use client' directive and proper state management
 - **Safe hooks**: Client-only window access
 - **Consistent rendering**: Same output on server and client
 - **Progressive enhancement**: Works without JavaScript
@@ -162,21 +162,24 @@ import { HolidayCountdown } from '@/components';
 
 ## Utilities
 
-### ClientOnly Components
+### Client-Side Components
 
 ```tsx
-import { ClientOnly, useClientOnly, useSafeWindow } from '@/components';
+'use client';
 
-// Wrapper component
-<ClientOnly fallback={<Loading />}>
-  <InteractiveComponent />
-</ClientOnly>;
+import { useState, useEffect } from 'react';
 
-// Hook for client detection
-const isClient = useClientOnly();
+function InteractiveComponent() {
+  const [mounted, setMounted] = useState(false);
 
-// Safe window access
-const window = useSafeWindow();
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <div>Loading...</div>;
+
+  return <div>Client-side content</div>;
+}
 ```
 
 ## Best Practices
@@ -185,7 +188,7 @@ const window = useSafeWindow();
 
 - Use the centralized import: `import { Component } from '@/components'`
 - Leverage the design tokens for consistency
-- Wrap client-side features with `ClientOnly`
+- Use 'use client' directive for client-side features
 - Use semantic HTML elements
 - Follow the established naming conventions
 
@@ -214,7 +217,7 @@ import { HolidayCountdown, SafePageContainer } from '@/components';
 
 1. Create component in appropriate folder (`ui`, `layout`, or `features`)
 2. Use design tokens from `@/lib/themes/tokens`
-3. Wrap client-side logic with `ClientOnly`
+3. Use 'use client' directive for client-side logic
 4. Add to `index.ts` exports
 5. Document in this README
 

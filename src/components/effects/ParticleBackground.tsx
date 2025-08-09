@@ -1,14 +1,13 @@
 'use client';
 
-import { memo, useCallback, useEffect, useState } from 'react';
-import { Container } from '@tsparticles/engine';
+import { HolidayTheme, holidayThemes } from '@/lib/themes/tokens';
+// Removed ClientOnly - using 'use client' directive for proper client-side rendering
 import Particles, {
   initParticlesEngine,
   IParticlesProps,
 } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
-import { ClientOnly } from '@/lib/utils/client-only';
-import { HolidayTheme, holidayThemes } from '@/lib/themes/tokens';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 
 // Inline styles to prevent hydration mismatches
 // Using CSS-in-JS objects ensures identical styling on server and client
@@ -129,8 +128,7 @@ function ParticleBackgroundInner({ theme }: ParticleBackgroundProps) {
   }, [mounted]);
 
   // Callback when particles are loaded (can add custom logic here)
-  // @typescript-eslint/no-unused-vars
-  const particlesLoaded = useCallback(async (_container?: Container) => {
+  const particlesLoaded = useCallback(async () => {
     // Optional: Add any initialization logic here
   }, []);
 
@@ -231,22 +229,12 @@ function ParticleBackgroundInner({ theme }: ParticleBackgroundProps) {
  * Main ParticleBackground component
  *
  * Renders themed particle animations with proper hydration safety.
- * Uses ClientOnly wrapper to prevent server/client mismatches.
+ * Uses 'use client' directive for proper client-side rendering.
  *
  * @param theme - Holiday theme that determines particle behavior and colors
  */
 export const ParticleBackground = memo(function ParticleBackground(
   props: ParticleBackgroundProps,
 ) {
-  // Create fallback style that matches the theme background
-  const fallbackStyle: React.CSSProperties = {
-    ...placeholderStyle,
-    backgroundColor: holidayThemes[props.theme].background,
-  };
-
-  return (
-    <ClientOnly fallback={<div style={fallbackStyle} />}>
-      <ParticleBackgroundInner {...props} />
-    </ClientOnly>
-  );
+  return <ParticleBackgroundInner {...props} />;
 });

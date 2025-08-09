@@ -1,0 +1,34 @@
+{
+  "recommendations": [
+    // Essential for linting and formatting
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    // TypeScript support
+    "ms-vscode.vscode-typescript-next",
+
+    // React/Next.js development
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-json",
+
+    // Styled Components
+    "styled-components.vscode-styled-components",
+
+    // Git integration
+    "eamodio.gitlens",
+
+    // Auto import and path intellisense
+    "christian-kohler.path-intellisense",
+    "steoates.autoimport-es6-ts",
+
+    // Useful utilities
+    "formulahendry.auto-rename-tag",
+    "ms-vscode.vscode-css-peek",
+    "bradlc.vscode-tailwindcss"
+  ],
+  "unwantedRecommendations": [
+    // Extensions that might conflict
+    "hookyqr.beautify",
+    "ms-vscode.vscode-typescript"
+  ]
+}

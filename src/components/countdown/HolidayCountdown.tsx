@@ -1,20 +1,20 @@
 'use client';
 
-import { memo, useEffect, useState } from 'react';
-import dayjs from 'dayjs';
-import { ClientOnly } from '@/lib/utils/client-only';
-import { calculateHolidayCountdown } from '@/lib/utils/countdown';
 import { HolidayTheme, holidayThemes } from '@/lib/themes/tokens';
+// Removed ClientOnly - using proper SSR handling with useState/useEffect
+import { calculateHolidayCountdown } from '@/lib/utils/countdown';
+import dayjs from 'dayjs';
+import { memo, useEffect, useState } from 'react';
+import {
+  Container,
+  CountdownLabel,
+  CountdownNumber,
+  CountdownNumberLarge,
+  HolidayMessage,
+} from './CountdownStyles';
 
 // Icon name types for better type safety
 export type IconName = 'home' | 'heart' | 'smile';
-import {
-  Container,
-  CountdownNumber,
-  CountdownNumberLarge,
-  CountdownLabel,
-  HolidayMessage,
-} from './CountdownStyles';
 
 /**
  * Holiday configuration interface
@@ -88,7 +88,7 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
     }, msUntilMidnight);
 
     return () => clearTimeout(timeout);
-  }, [holiday.month, holiday.day]);
+  }, [holiday]);
 
   // Get theme colors for consistent styling
   const colors = holidayThemes[holiday.theme];
@@ -132,7 +132,7 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
  * Main HolidayCountdown component
  *
  * Displays a countdown to a specified holiday with automatic updates.
- * Uses ClientOnly wrapper to prevent hydration mismatches from date calculations.
+ * Uses proper SSR-safe state management to prevent hydration mismatches.
  *
  * Features:
  * - Automatic daily updates at midnight
@@ -146,9 +146,5 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
 export const HolidayCountdown = memo(function HolidayCountdown(
   props: HolidayCountdownProps,
 ) {
-  return (
-    <ClientOnly>
-      <CountdownInner {...props} />
-    </ClientOnly>
-  );
+  return <CountdownInner {...props} />;
 });

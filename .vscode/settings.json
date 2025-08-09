@@ -1,7 +1,80 @@
 {
+  // Code formatting and linting
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  // ESLint configuration
+  "eslint.enable": true,
+  "eslint.run": "onType",
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.workingDirectories": ["./"],
+  "eslint.useFlatConfig": false,
+  "eslint.experimental.useFlatConfig": false,
+  "eslint.options": {
+    "extensions": [".js", ".jsx", ".ts", ".tsx"]
+  },
+  "eslint.env": {
+    "ESLINT_USE_FLAT_CONFIG": "false"
+  },
+
+  // TypeScript configuration
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.suggest.autoImports": true,
+
+  // Editor display settings
+  "problems.showNearbyQuickFixes": true,
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+
+  // Show inline errors and warnings
+  "editor.inlineSuggest.enabled": true,
+  "editor.suggest.preview": true,
+  "editor.hover.enabled": true,
+
+  // Error and warning display
+  "editor.showUnused": true,
+  "editor.showDeprecated": true,
+  "problems.decorations.enabled": true,
+  "editor.renderLineHighlight": "all",
+  "editor.occurrencesHighlight": true,
+
+  // File associations for better syntax highlighting
+  "files.associations": {
+    "*.tsx": "typescriptreact",
+    "*.ts": "typescript"
+  },
+
+  // Auto-save to trigger linting
+  "files.autoSave": "onFocusChange"
 }

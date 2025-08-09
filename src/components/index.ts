@@ -15,7 +15,7 @@ export * from './effects/ParticleBackground';
 export * from './seo/StructuredData';
 
 // Utils
-export * from '../lib/utils/client-only';
-export * from '../lib/themes/tokens';
+// Removed ClientOnly exports - using modern Next.js patterns instead
 export * from '../lib/metadata';
+export * from '../lib/themes/tokens';
 export * from '../styles/antdTheme';

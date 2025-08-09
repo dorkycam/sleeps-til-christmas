@@ -1,7 +1,7 @@
-import { ImageResponse } from 'next/og';
-import { NextRequest } from 'next/server';
 import { getHolidayBySlug } from '@/lib/holidays';
 import { holidayThemes } from '@/lib/themes/tokens';
+import { ImageResponse } from 'next/og';
+import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
@@ -123,6 +123,7 @@ export async function GET(request: NextRequest) {
       },
     );
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error generating OG image:', error);
     return new Response('Failed to generate image', { status: 500 });
   }

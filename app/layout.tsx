@@ -1,9 +1,10 @@
-import '@/styles/globals.css';
-import { Metadata } from 'next';
-import StyledComponentsRegistry from '@/lib/registry';
 import AntdRegistry from '@/lib/antd-registry';
-import { ConfigProvider } from 'antd';
+import StyledComponentsRegistry from '@/lib/registry';
 import { defaultAntdTheme } from '@/styles/antdTheme';
+import '@/styles/globals.css';
+import { ConfigProvider } from 'antd';
+import { Metadata } from 'next';
+import React from 'react';
 
 export const metadata: Metadata = {
   title: {
