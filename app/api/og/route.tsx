@@ -24,10 +24,10 @@ export async function GET(request: NextRequest) {
     // Dynamic text based on countdown
     const countdownText =
       sleepsNumber === 0
-        ? 'Today!'
+        ? 'today!'
         : sleepsNumber === 1
-          ? '1 Sleep Left'
-          : `${sleepsNumber} Sleeps`;
+          ? '1 sleep left'
+          : `${sleepsNumber} sleeps`;
 
     const mainText =
       sleepsNumber === 0

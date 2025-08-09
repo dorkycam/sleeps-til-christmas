@@ -6,7 +6,7 @@ environment-defaults:
     branch: null
     repository: null
 global:
-  application_name: Sleeps Til Christmas
+  application_name: sleeps 'til christmas
   default_ec2_keyname: null
   default_platform: Node.js 16 running on 64bit Amazon Linux 2
   default_region: us-east-1

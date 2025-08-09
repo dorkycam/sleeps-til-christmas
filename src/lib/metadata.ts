@@ -1,10 +1,10 @@
-import { Metadata } from 'next';
 import { Holiday } from '@/components/countdown/HolidayCountdown';
 import {
   calculateHolidayCountdown,
-  getHolidayDescription,
   formatCountdownTitle,
+  getHolidayDescription,
 } from '@/lib/utils/countdown';
+import { Metadata } from 'next';
 import { holidayThemes } from './themes/tokens';
 
 const baseUrl = 'https://sleepstilchristmas.com';
@@ -21,7 +21,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
   const title = formatCountdownTitle(holiday);
   const colors = holidayThemes[holiday.theme];
 
-  const fullTitle = `${title} | Sleeps 'til Christmas`;
+  const fullTitle = `${title} | sleeps 'til christmas`;
 
   // Keywords for SEO
   const keywords = [
@@ -45,7 +45,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       description,
       url:
         holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`,
-      siteName: "Sleeps 'til Christmas",
+      siteName: "sleeps 'til christmas",
       type: 'website',
       locale: 'en_US',
 
@@ -93,7 +93,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
 
       // WhatsApp & iMessage meta tags
       'apple-mobile-web-app-title': fullTitle,
-      'application-name': "Sleeps 'til Christmas",
+      'application-name': "sleeps 'til christmas",
 
       // Pinterest Rich Pins
       'pinterest-rich-pin': 'true',
@@ -145,7 +145,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
     // Apple/iOS specific tags
     appleWebApp: {
       capable: true,
-      title: "Sleeps 'til Christmas",
+      title: "sleeps 'til christmas",
       statusBarStyle: 'default',
     },
   };
@@ -156,7 +156,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
  */
 export function generate404Metadata(): Metadata {
   return {
-    title: "Page Not Found | Sleeps 'til Christmas",
+    title: "Page Not Found | sleeps 'til christmas",
     description:
       "The page you're looking for seems to have wandered off into the holiday spirit. Choose from our festive destinations to get back to celebrating!",
     robots: {

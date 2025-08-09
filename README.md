@@ -1,4 +1,4 @@
-# Sleeps 'til Christmas 🎄
+# sleeps 'til christmas 🎄
 
 [![CI](https://github.com/dorkycam/sleeps-til-christmas/actions/workflows/ci.yml/badge.svg)](https://github.com/dorkycam/sleeps-til-christmas/actions/workflows/ci.yml)
 [![Deploy to Production](https://github.com/dorkycam/sleeps-til-christmas/actions/workflows/deploy-production.yml/badge.svg)](https://github.com/dorkycam/sleeps-til-christmas/actions/workflows/deploy-production.yml)

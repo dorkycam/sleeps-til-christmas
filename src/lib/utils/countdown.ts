@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
 import { Holiday } from '@/components/countdown/HolidayCountdown';
+import dayjs from 'dayjs';
 
 export interface CountdownResult {
   sleepsUntil: number;
@@ -90,10 +90,10 @@ export function formatCountdownTitle(holiday: Holiday): string {
   const { sleepsUntil, isToday } = calculateHolidayCountdown(holiday);
 
   if (isToday) {
-    return `Today is ${holiday.name}!`;
+    return `today is ${holiday.name}!`;
   } else if (sleepsUntil === 1) {
     return `1 Sleep Until ${holiday.name}`;
   } else {
-    return `${sleepsUntil} Sleeps Until ${holiday.name}`;
+    return `${sleepsUntil} sleeps 'til ${holiday.name}`;
   }
 }

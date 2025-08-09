@@ -1,5 +1,5 @@
-import { calculateHolidayCountdown } from '@/lib/utils/countdown';
 import { Holiday } from '@/components/countdown/HolidayCountdown';
+import { calculateHolidayCountdown } from '@/lib/utils/countdown';
 
 interface StructuredDataProps {
   holiday: Holiday;
@@ -20,7 +20,7 @@ export function StructuredData({ holiday }: StructuredDataProps) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: `${sleepsUntil} Sleeps Until ${holiday.name}`,
+    name: `${sleepsUntil} sleeps 'til ${holiday.name}`,
     description: `Track the countdown to ${holiday.name}. ${sleepsUntil} sleeps remaining until the celebration!`,
     url: pageUrl,
     mainEntity: {
@@ -38,7 +38,7 @@ export function StructuredData({ holiday }: StructuredDataProps) {
     },
     publisher: {
       '@type': 'Organization',
-      name: "Sleeps 'til Christmas",
+      name: "sleeps 'til christmas",
       url: baseUrl,
     },
     breadcrumb: {

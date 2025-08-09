@@ -63,7 +63,6 @@ This repository uses GitHub Actions for automated testing, building, and deploym
 1. ✅ Tests pass on Node.js 18.x & 20.x
 2. ✅ TypeScript compiles without errors
 3. ✅ Linting passes
-4. ✅ Security audit passes
 
 ## 📊 Status Badges
 

@@ -8,8 +8,8 @@ import React from 'react';
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Sleeps 'til Christmas",
-    default: "Sleeps 'til Christmas",
+    template: "%s | sleeps 'til christmas",
+    default: "sleeps 'til christmas",
   },
   viewport: 'width=device-width, initial-scale=1',
   icons: {
