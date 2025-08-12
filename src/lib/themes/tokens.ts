@@ -102,6 +102,22 @@ export const holidayThemes = {
     text: '#ffffff', // White text for contrast
     background: '#EBCEDA', // Light pink background
   },
+  newyear: {
+    primary: '#FFD700', // Gold - celebration
+    secondary: '#000000', // Black - classic
+    text: '#ffffff', // White text for contrast
+    background: '#FFD700', // Gold background
+  },
+  birthday: {
+    primary: '#e4abfcff', // Light pink - festive
+    secondary: '#ffffff', // Gold - celebration
+    text: '#ffffff', // Black text for contrast
+    background: '#e4abfcff', // Light pink background
+  },
+  /**
+   * Default theme for fallback or unrecognized holidays
+   * Provides a clean, neutral design.
+   */
   default: {
     primary: '#ffffff', // White - clean
     secondary: '#000000', // Black - classic

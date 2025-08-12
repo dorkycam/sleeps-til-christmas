@@ -37,6 +37,18 @@ export const holidays = {
     theme: 'valentines' as const,
     iconName: 'heart' as const,
   },
+  'rileys-birthday': {
+    slug: 'rileys-birthday' as const,
+    month: 9,
+    day: 7,
+    message: 'Happy Birthday Riley!',
+    name: "Riley's birthday",
+    theme: 'birthday' as const,
+    iconName: 'gift' as const,
+    spotifyLinks: [
+      'https://open.spotify.com/playlist/37i9dQZF1DX6cg4h2PoN9y?si=31b9193a212b4b4f',
+    ],
+  },
 } as const satisfies Record<string, Holiday>;
 
 /**

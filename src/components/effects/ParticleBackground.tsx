@@ -77,6 +77,28 @@ const particleConfigs: Record<HolidayTheme, ParticleConfig> = {
     onClick: 'repulse', // Push away on click
     onHover: 'attract', // Draw towards cursor (romantic)
   },
+  newyear: {
+    count: 50, // Moderate particle count
+    speed: 3, // Moderate speed
+    size: { min: 2, max: 8 }, // Small fireworks
+    shape: 'circle', // Round fireworks
+    direction: 'none', // Random movement
+    onClick: 'repulse', // Push away on click
+    onHover: 'repulse', // Push away on hover
+  },
+  birthday: {
+    count: 50, // Many particles for festive feel
+    speed: 5, // Fast movement
+    size: { min: 2, max: 10 }, // Small to medium confetti
+    shape: 'circle', // Round confetti shapes
+    direction: 'none', // Random floating
+    onClick: 'push', // Push away on click
+    onHover: 'attract', // Push away on hover
+  },
+  /**
+   * Default configuration for unrecognized themes
+   * Provides a clean, neutral particle effect.
+   */
   default: {
     count: 50, // Moderate particle count
     speed: 2, // Slow movement

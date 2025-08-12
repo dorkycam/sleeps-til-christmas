@@ -18,7 +18,14 @@ import {
 } from './CountdownStyles';
 
 // Icon name types for better type safety
-export type IconName = 'home' | 'heart' | 'smile';
+export type IconName =
+  | 'home'
+  | 'heart'
+  | 'smile'
+  | 'fireworks'
+  | 'tree'
+  | 'pumpkin'
+  | 'gift';
 
 /**
  * Holiday configuration interface
