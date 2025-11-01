@@ -38,6 +38,7 @@ interface ParticleConfig {
   speed: number; // Movement speed of particles
   size: { min: number; max: number }; // Size range for particles
   shape: 'circle' | 'image'; // Particle shape type
+  image?: { src: string; width: number; height: number }[]; // Image sources for 'image' shape
   direction?: 'none' | 'bottom' | 'top'; // Movement direction
   bounce?: boolean; // Whether particles bounce off edges
   onClick?: 'repulse' | 'attract' | 'push'; // Click interaction
@@ -62,7 +63,12 @@ const particleConfigs: Record<HolidayTheme, ParticleConfig> = {
     count: 30, // Fewer particles for spooky feel
     speed: 4, // Medium movement
     size: { min: 10, max: 50 }, // Large pumpkin shapes
-    shape: 'image', // Custom pumpkin images
+    shape: 'image', // Custom images
+    image: [
+      { src: '/images/ghost.png', width: 32, height: 32 },
+      { src: '/images/pumpkin.png', width: 32, height: 32 },
+      { src: '/images/witch.png', width: 32, height: 32 },
+    ],
     direction: 'none', // Random floating
     bounce: true, // Bounce off walls
     onClick: 'repulse', // Push away on click
@@ -210,6 +216,7 @@ function ParticleBackgroundInner({ theme }: ParticleBackgroundProps) {
       color: {
         value: colors.secondary,
       },
+
       move: {
         direction: config.direction || 'none',
         enable: true,
@@ -229,6 +236,12 @@ function ParticleBackgroundInner({ theme }: ParticleBackgroundProps) {
       },
       shape: {
         type: config.shape,
+        options:
+          config.shape === 'image'
+            ? {
+                image: config.image,
+              }
+            : undefined,
       },
       size: {
         value: config.size,

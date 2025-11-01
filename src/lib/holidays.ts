@@ -26,7 +26,7 @@ export const holidays = {
     message: 'Happy Halloween!',
     name: 'halloween',
     theme: 'halloween' as const,
-    iconName: 'smile' as const,
+    iconName: 'pumpkin' as const,
   },
   'valentines-day': {
     slug: 'valentines-day' as const,
