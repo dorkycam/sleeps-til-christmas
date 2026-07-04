@@ -1,10 +1,12 @@
 'use client';
 
 import { HolidayTheme, holidayThemes } from '@/lib/themes/tokens';
+import type { Engine } from '@tsparticles/engine';
 // Removed ClientOnly - using 'use client' directive for proper client-side rendering
 import Particles, {
-  initParticlesEngine,
   IParticlesProps,
+  ParticlesProvider,
+  useParticlesProvider,
 } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
 import React, { memo, useCallback, useEffect, useState } from 'react';
@@ -122,51 +124,31 @@ interface ParticleBackgroundProps {
 }
 
 /**
- * Internal particle component that handles initialization
- * Separated from main component to ensure proper client-side rendering
+ * Registers the slim tsparticles bundle with the engine.
+ *
+ * Defined at module scope (rather than inline in a render) so the reference
+ * stays stable across renders, since `ParticlesProvider` requires its `init`
+ * callback to be stable across the app lifecycle.
  */
-function ParticleBackgroundInner({ theme }: ParticleBackgroundProps) {
-  // Track particle engine initialization state
-  const [init, setInit] = useState(false);
-  // Track client-side mounting to prevent SSR issues
-  const [mounted, setMounted] = useState(false);
+async function initEngine(engine: Engine): Promise<void> {
+  await loadSlim(engine);
+}
 
-  // Set mounted flag after component mounts
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Initialize particle engine only after mounting
-  useEffect(() => {
-    if (!mounted) return;
-
-    const initEngine = async () => {
-      try {
-        // Initialize particles engine with slim bundle (smaller size)
-        await initParticlesEngine(async engine => {
-          await loadSlim(engine);
-        });
-        setInit(true);
-      } catch (error) {
-        console.error('Failed to initialize particles:', error);
-      }
-    };
-
-    initEngine();
-  }, [mounted]);
+/**
+ * Renders the themed particles once the shared tsparticles engine (provided
+ * by the parent `ParticlesProvider`) has finished loading. Shows a
+ * placeholder in the meantime to avoid a layout shift.
+ */
+function ParticlesLayer({ theme }: { theme: HolidayTheme }) {
+  const { loaded } = useParticlesProvider();
 
   // Callback when particles are loaded (can add custom logic here)
   const particlesLoaded = useCallback(async () => {
     // Optional: Add any initialization logic here
   }, []);
 
-  // Show placeholder while not mounted (prevents hydration mismatch)
-  if (!mounted) {
-    return <div style={placeholderStyle} />;
-  }
-
   // Show placeholder while particle engine initializes
-  if (!init) {
+  if (!loaded) {
     return <div style={placeholderStyle} />;
   }
 
@@ -257,6 +239,31 @@ function ParticleBackgroundInner({ theme }: ParticleBackgroundProps) {
       options={particleOptions}
       particlesLoaded={particlesLoaded}
     />
+  );
+}
+
+/**
+ * Internal particle component that handles initialization
+ * Separated from main component to ensure proper client-side rendering
+ */
+function ParticleBackgroundInner({ theme }: ParticleBackgroundProps) {
+  // Track client-side mounting to prevent SSR issues
+  const [mounted, setMounted] = useState(false);
+
+  // Set mounted flag after component mounts
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Show placeholder while not mounted (prevents hydration mismatch)
+  if (!mounted) {
+    return <div style={placeholderStyle} />;
+  }
+
+  return (
+    <ParticlesProvider init={initEngine}>
+      <ParticlesLayer theme={theme} />
+    </ParticlesProvider>
   );
 }
 

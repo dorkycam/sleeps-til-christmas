@@ -14,9 +14,9 @@
     "deploy": "eb deploy production -v"
   },
   "dependencies": {
-    "@tsparticles/engine": "^3.9.1",
-    "@tsparticles/react": "^3.0.0",
-    "@tsparticles/slim": "^3.9.1",
+    "@tsparticles/engine": "^4",
+    "@tsparticles/react": "^4",
+    "@tsparticles/slim": "^4",
     "@types/node": "^24.2.1",
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
@@ -27,7 +27,7 @@
     "next": "^15.4.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "tsparticles": "^3.9.1",
+    "tsparticles": "^4",
     "typescript": "^5.9.2"
   },
   "devDependencies": {
