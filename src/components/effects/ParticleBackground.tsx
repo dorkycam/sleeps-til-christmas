@@ -159,11 +159,6 @@ function ParticlesLayer({ theme }: { theme: HolidayTheme }) {
   // Build particle configuration object
   const particleOptions: IParticlesProps['options'] = {
     autoPlay: true,
-    background: {
-      color: {
-        value: colors.background,
-      },
-    },
     fpsLimit: 120,
     interactivity: {
       events: {
