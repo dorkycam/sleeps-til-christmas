@@ -21,4 +21,3 @@ export * from './seo/StructuredData';
 // Removed ClientOnly exports - using modern Next.js patterns instead
 export * from '../lib/metadata';
 export * from '../lib/themes/tokens';
-export * from '../styles/antdTheme';
