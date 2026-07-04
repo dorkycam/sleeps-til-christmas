@@ -4,7 +4,8 @@ import {
   getHolidayBySlug,
   isValidHolidaySlug,
 } from '@/lib/holidays';
-import { generateHolidayMetadata } from '@/lib/metadata';
+import { generateHolidayMetadata, generateHolidayViewport } from '@/lib/metadata';
+import { Viewport } from 'next';
 import { notFound } from 'next/navigation';
 
 interface HolidayPageProps {
@@ -24,6 +25,22 @@ export async function generateMetadata({ params }: HolidayPageProps) {
   }
 
   return generateHolidayMetadata(holiday);
+}
+
+/**
+ * Generate viewport for dynamic holiday pages
+ */
+export async function generateViewport({
+  params,
+}: HolidayPageProps): Promise<Viewport> {
+  const { slug } = await params;
+  const holiday = getHolidayBySlug(slug);
+
+  if (!holiday || slug === 'christmas') {
+    notFound();
+  }
+
+  return generateHolidayViewport(holiday);
 }
 
 /**

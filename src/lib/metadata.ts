@@ -4,7 +4,7 @@ import {
   formatCountdownTitle,
   getHolidayDescription,
 } from '@/lib/utils/countdown';
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 import { holidayThemes } from './themes/tokens';
 
 const baseUrl = 'https://sleepstilchristmas.com';
@@ -125,21 +125,10 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       },
     },
 
-    // Theme color based on holiday (used by mobile browsers and some apps)
-    themeColor: colors.primary,
-
     // Canonical URL
     alternates: {
       canonical:
         holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`,
-    },
-
-    // App-like behavior on mobile
-    viewport: {
-      width: 'device-width',
-      initialScale: 1,
-      maximumScale: 5,
-      userScalable: true,
     },
 
     // Apple/iOS specific tags
@@ -148,6 +137,27 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       title: "sleeps 'til christmas",
       statusBarStyle: 'default',
     },
+  };
+}
+
+/**
+ * Generate the viewport (and theme color) for a holiday page.
+ *
+ * Kept separate from metadata per Next.js's viewport API, which requires
+ * viewport and themeColor to live in a `generateViewport`/`viewport` export
+ * rather than inside the metadata object.
+ *
+ * @param holiday - Holiday to theme the viewport for
+ * @returns the page viewport configuration
+ */
+export function generateHolidayViewport(holiday: Holiday): Viewport {
+  const colors = holidayThemes[holiday.theme];
+  return {
+    themeColor: colors.primary,
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
   };
 }
 
