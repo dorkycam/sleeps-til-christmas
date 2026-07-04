@@ -8,10 +8,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -- --port $PORT",
+    "start": "next start",
     "lint": "eslint .",
-    "server": "npm run build && npm run start",
-    "deploy": "eb deploy production -v"
+    "test": "vitest run"
   },
   "dependencies": {
     "@tsparticles/engine": "^4",
