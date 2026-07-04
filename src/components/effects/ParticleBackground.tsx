@@ -9,7 +9,7 @@ import Particles, {
   useParticlesProvider,
 } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useSyncExternalStore } from 'react';
 
 // Inline styles to prevent hydration mismatches
 // Using CSS-in-JS objects ensures identical styling on server and client
@@ -242,18 +242,33 @@ function ParticlesLayer({ theme }: { theme: HolidayTheme }) {
   );
 }
 
+function subscribeNoop(): () => void {
+  return () => {};
+}
+
+/**
+ * Reports whether the component has hydrated on the client.
+ *
+ * Uses `useSyncExternalStore` (rather than `useState` + `useEffect`) so the
+ * client/server snapshot mismatch is resolved by React itself instead of by
+ * synchronously calling `setState` inside an effect, which can trigger
+ * cascading renders.
+ */
+function useMounted(): boolean {
+  return useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false,
+  );
+}
+
 /**
  * Internal particle component that handles initialization
  * Separated from main component to ensure proper client-side rendering
  */
 function ParticleBackgroundInner({ theme }: ParticleBackgroundProps) {
   // Track client-side mounting to prevent SSR issues
-  const [mounted, setMounted] = useState(false);
-
-  // Set mounted flag after component mounts
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   // Show placeholder while not mounted (prevents hydration mismatch)
   if (!mounted) {
