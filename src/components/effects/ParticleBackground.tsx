@@ -81,6 +81,14 @@ const particleConfigs: Record<HolidayTheme, ParticleConfig> = {
     speed: 4, // Gentle movement
     size: { min: 4, max: 10 }, // Small to medium hearts
     shape: 'image', // Heart shapes
+    image: [
+      {
+        // Inline pink heart SVG (no external asset needed).
+        src: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Cpath%20fill='%23ff69b4'%20d='M23.6%202c-3.4%200-6.3%202.7-7.6%205.6C14.7%204.7%2011.8%202%208.4%202%203.8%202%200%205.8%200%2010.4c0%209%2016%2020%2016%2020s16-11%2016-20C32%205.8%2028.2%202%2023.6%202z'/%3E%3C/svg%3E",
+        width: 32,
+        height: 32,
+      },
+    ],
     direction: 'none', // Floating hearts
     onClick: 'repulse', // Push away on click
     onHover: 'attract', // Draw towards cursor (romantic)

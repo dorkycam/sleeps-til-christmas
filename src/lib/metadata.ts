@@ -1,7 +1,6 @@
 import { Holiday } from '@/components/countdown/HolidayCountdown';
 import {
   calculateHolidayCountdown,
-  formatCountdownTitle,
   getHolidayDescription,
 } from '@/lib/utils/countdown';
 import { Metadata, Viewport } from 'next';
@@ -18,10 +17,16 @@ const baseUrl = 'https://sleepstilchristmas.com';
 export function generateHolidayMetadata(holiday: Holiday): Metadata {
   const { sleepsUntil } = calculateHolidayCountdown(holiday);
   const description = getHolidayDescription(holiday);
-  const title = formatCountdownTitle(holiday);
   const colors = holidayThemes[holiday.theme];
 
-  const fullTitle = `${title} | sleeps 'til christmas`;
+  // Number-less title: the sleep count is baked at build time for statically
+  // generated pages, so keeping it out of metadata avoids a stale count. The
+  // live count is reflected in the browser tab via document.title on the client
+  // (see HolidayCountdown).
+  const pageTitle =
+    holiday.slug === 'christmas'
+      ? "sleeps 'til christmas"
+      : `sleeps 'til ${holiday.name}`;
 
   // Keywords for SEO
   const keywords = [
@@ -35,13 +40,13 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
   ];
 
   return {
-    title: fullTitle,
+    title: { absolute: pageTitle },
     description,
     keywords: keywords.join(', '),
 
     // Open Graph for social sharing (Facebook, Instagram, LinkedIn, WhatsApp, Discord, etc.)
     openGraph: {
-      title: fullTitle,
+      title: pageTitle,
       description,
       url:
         holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`,
@@ -74,7 +79,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       card: 'summary_large_image',
       site: '@sleepstilxmas', // Add your Twitter handle if you have one
       creator: '@sleepstilxmas',
-      title: fullTitle,
+      title: pageTitle,
       description,
       images: [
         {
@@ -92,7 +97,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       'telegram:channel': '@sleepstilchristmas',
 
       // WhatsApp & iMessage meta tags
-      'apple-mobile-web-app-title': fullTitle,
+      'apple-mobile-web-app-title': pageTitle,
       'application-name': "sleeps 'til christmas",
 
       // Pinterest Rich Pins
@@ -105,7 +110,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       'theme-color': colors.primary,
 
       // Generic social media meta
-      'social:title': fullTitle,
+      'social:title': pageTitle,
       'social:description': description,
       'social:image': `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}`,
       'social:url':
@@ -166,7 +171,7 @@ export function generateHolidayViewport(holiday: Holiday): Viewport {
  */
 export function generate404Metadata(): Metadata {
   return {
-    title: "Page Not Found | sleeps 'til christmas",
+    title: 'Page Not Found',
     description:
       "The page you're looking for seems to have wandered off into the holiday spirit. Choose from our festive destinations to get back to celebrating!",
     robots: {
