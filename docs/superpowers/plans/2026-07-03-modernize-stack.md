@@ -179,11 +179,14 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 - Produces: `HolidayCountdown` renders identical layout/typography via Tailwind. No exported API change (still `export const HolidayCountdown`, `export interface Holiday`, `export type IconName`).
 
 **Class mapping reference (from `CountdownStyles.ts`):**
-- Container: `absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center z-10 flex flex-col items-center justify-center`
-- CountdownNumber (h1): `text-[96px] leading-none m-0 min-[451px]:text-[128px]`
-- CountdownNumberLarge (h1): `text-[128px] leading-none m-0 min-[451px]:text-[150px]`
-- CountdownLabel (h2): `text-[36px] leading-[1.2] m-0 font-semibold min-[451px]:text-[48px]`
-- HolidayMessage (h1): `text-[48px] leading-none m-0 min-[451px]:text-[72px]`
+- Container: `absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center z-10 flex flex-col items-center justify-center` — ALSO carries the holiday CSS vars via `style={holidayCssVars(holiday.theme)}`.
+- CountdownNumber (h1): `text-[96px] leading-none m-0 text-[var(--holiday-text)] min-[451px]:text-[128px]`
+- CountdownNumberLarge (h1): `text-[128px] leading-none m-0 text-[var(--holiday-text)] min-[451px]:text-[150px]`
+- CountdownLabel (h2): `text-[36px] leading-[1.2] m-0 font-semibold text-[var(--holiday-text)] min-[451px]:text-[48px]`
+- HolidayMessage (h1): `text-[48px] leading-none m-0 text-[var(--holiday-text)] min-[451px]:text-[72px]`
+
+Color comes from the `--holiday-text` CSS variable set on the container by
+`holidayCssVars` (Task 2.5) — no per-element inline color styles.
 
 - [ ] **Step 1: Delete `CountdownStyles.ts`**
 
@@ -198,7 +201,7 @@ Replace the import block and the three `return` JSX blocks. The full new file:
 ```tsx
 'use client';
 
-import { holidayThemes } from '@/lib/themes/tokens';
+import { holidayCssVars } from '@/lib/themes/holidayStyle';
 import {
   calculateHolidayCountdown,
   getCountdownLabel,
@@ -274,15 +277,12 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
     return () => clearTimeout(timeout);
   }, [holiday]);
 
-  const colors = holidayThemes[holiday.theme];
+  const themeVars = holidayCssVars(holiday.theme);
 
   if (!countdown.isLoaded) {
     return (
-      <div className={CONTAINER_CLASS}>
-        <h1
-          className="text-[96px] leading-none m-0 min-[451px]:text-[128px]"
-          style={{ color: colors.text }}
-        >
+      <div className={CONTAINER_CLASS} style={themeVars}>
+        <h1 className="text-[96px] leading-none m-0 text-[var(--holiday-text)] min-[451px]:text-[128px]">
           ...
         </h1>
       </div>
@@ -291,11 +291,8 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
 
   if (countdown.isHoliday) {
     return (
-      <div className={CONTAINER_CLASS}>
-        <h1
-          className="text-[48px] leading-none m-0 min-[451px]:text-[72px]"
-          style={{ color: colors.text }}
-        >
+      <div className={CONTAINER_CLASS} style={themeVars}>
+        <h1 className="text-[48px] leading-none m-0 text-[var(--holiday-text)] min-[451px]:text-[72px]">
           {holiday.message}
         </h1>
       </div>
@@ -306,17 +303,11 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
   const countdownLabel = getCountdownLabel(holiday);
 
   return (
-    <div className={CONTAINER_CLASS}>
-      <h1
-        className="text-[128px] leading-none m-0 min-[451px]:text-[150px]"
-        style={{ color: colors.text }}
-      >
+    <div className={CONTAINER_CLASS} style={themeVars}>
+      <h1 className="text-[128px] leading-none m-0 text-[var(--holiday-text)] min-[451px]:text-[150px]">
         {countdownNumber}
       </h1>
-      <h2
-        className="text-[36px] leading-[1.2] m-0 font-semibold min-[451px]:text-[48px]"
-        style={{ color: colors.text }}
-      >
+      <h2 className="text-[36px] leading-[1.2] m-0 font-semibold text-[var(--holiday-text)] min-[451px]:text-[48px]">
         {countdownLabel}
       </h2>
     </div>
