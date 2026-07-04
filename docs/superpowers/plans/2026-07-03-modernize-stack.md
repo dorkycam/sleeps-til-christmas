@@ -963,7 +963,7 @@ Replace the `scripts` block with:
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "vitest run"
   },
 ```
