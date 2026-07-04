@@ -5,6 +5,9 @@ export * from './layout/SafePageContainer';
 export * from './pages/HolidayPage';
 export * from './pages/NotFoundPage';
 
+// Media Components
+export * from './media/SpotifyEmbed';
+
 // Countdown Components
 export * from './countdown/HolidayCountdown';
 
