@@ -21,7 +21,7 @@ export const viewport: Viewport = {
 /**
  * Root layout. Wraps every route; provides global styles and metadata.
  *
- * @param props - children to render inside the document body
+ * @param props.children - content to render inside the document body
  */
 export default function RootLayout({
   children,

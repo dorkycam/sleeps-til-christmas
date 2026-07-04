@@ -9,7 +9,7 @@ import { SafePageContainer } from '@/components/layout/SafePageContainer';
 import { SpotifyEmbed } from '@/components/media/SpotifyEmbed';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { holidayThemes } from '@/lib/themes/tokens';
-import { memo, useCallback, useMemo, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 
 enum SpotifyVisibilityState {
   Wide,
@@ -29,7 +29,7 @@ interface HolidayPageProps {
  */
 export const HolidayPage = memo(function HolidayPage({
   holiday,
-}: HolidayPageProps) {
+}: HolidayPageProps): React.JSX.Element {
   const { theme, spotifyLinks } = holiday;
   const [spotifyVisibility, setSpotifyVisibility] =
     useState<SpotifyVisibilityState>(SpotifyVisibilityState.Wide);

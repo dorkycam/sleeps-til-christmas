@@ -1,9 +1,9 @@
 import { HolidayPage } from '@/components';
 import { getHolidayBySlugSafe } from '@/lib/holidays';
 import { generateHolidayMetadata, generateHolidayViewport } from '@/lib/metadata';
-import { Viewport } from 'next';
+import { Metadata, Viewport } from 'next';
 
-export function generateMetadata() {
+export function generateMetadata(): Metadata {
   const holiday = getHolidayBySlugSafe('christmas');
   return generateHolidayMetadata(holiday);
 }

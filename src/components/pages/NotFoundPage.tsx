@@ -1,11 +1,12 @@
 'use client';
 
+import React from 'react';
+import { Heart, Home, Smile, type LucideIcon } from 'lucide-react';
+import Link from 'next/link';
+
 import { SafePageContainer } from '@/components/layout/SafePageContainer';
 import { getAllHolidaySlugs, getHolidayBySlug } from '@/lib/holidays';
 import { holidayThemes } from '@/lib/themes/tokens';
-import { Heart, Home, Smile, type LucideIcon } from 'lucide-react';
-import Link from 'next/link';
-import React from 'react';
 
 /**
  * Map a holiday iconName to a lucide icon component.

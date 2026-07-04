@@ -28,7 +28,7 @@ src/components/
 - **Memoized components**: All components use `React.memo`
 - **Lazy loading**: Client-side features load after hydration
 - **Tree shaking**: Only import what you need
-- **Minimal bundle**: Optimized styled-components setup
+- **Minimal bundle**: Optimized Tailwind CSS v4 setup
 
 ### 🚫 Zero Hydration Errors
 
@@ -167,14 +167,14 @@ import { HolidayCountdown } from '@/components';
 ```tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 
 function InteractiveComponent() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   if (!mounted) return <div>Loading...</div>;
 
@@ -197,7 +197,6 @@ function InteractiveComponent() {
 - Import components directly from sub-folders
 - Use inline styles instead of design tokens
 - Access `window` directly in render
-- Create new styled-components for one-off styles
 - Mix client and server component patterns
 
 ## Migration Guide
@@ -224,9 +223,8 @@ import { HolidayCountdown, SafePageContainer } from '@/components';
 ## Performance Tips
 
 - Components are memoized by default
-- Particles load after hydration to prevent blocking
+- Particles load after hydration to prevent blocking (tsparticles v4, gated with `useSyncExternalStore`)
 - Window size detection is debounced
-- Styled-components are server-side rendered
 - Bundle is optimized for tree shaking
 
 ## Browser Support
