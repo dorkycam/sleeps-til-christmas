@@ -44,7 +44,7 @@ export const HolidayPage = memo(function HolidayPage({
     if (spotifyLinks && spotifyLinks.length > 0) {
       return (
         <SpotifyEmbed
-          className="w-full max-w-[500px]"
+          className="w-full max-w-[500px] mx-auto"
           hidden={spotifyVisibility === SpotifyVisibilityState.Hidden}
           wide={spotifyVisibility === SpotifyVisibilityState.Wide}
           link={spotifyLinks[0]}
