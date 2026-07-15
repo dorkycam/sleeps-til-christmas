@@ -19,10 +19,10 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
   const description = getHolidayDescription(holiday);
   const colors = holidayThemes[holiday.theme];
 
-  // Number-less title: the sleep count is baked at build time for statically
-  // generated pages, so keeping it out of metadata avoids a stale count. The
-  // live count is reflected in the browser tab via document.title on the client
-  // (see HolidayCountdown).
+  // Number-less title: for statically generated pages the sleep count would be
+  // baked in at build time and go stale, so it is intentionally kept out of the
+  // page <title>. The live count is shown in the on-page countdown UI, not the
+  // browser tab.
   const pageTitle =
     holiday.slug === 'christmas'
       ? "sleeps 'til christmas"

@@ -66,12 +66,13 @@ export function NotFoundPage(): React.JSX.Element {
                 <Link key={slug} href={href} className="no-underline">
                   <button
                     type="button"
-                    className="flex items-center gap-2 h-10 text-[14px] font-semibold rounded-lg min-w-[140px] justify-center px-4 shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-all duration-300 min-[451px]:h-12 min-[451px]:text-[16px] min-[451px]:min-w-[180px]"
-                    style={{
-                      backgroundColor: colors.primary,
-                      borderColor: colors.primary,
-                      color: fontColor,
-                    }}
+                    className="flex items-center gap-2 h-10 text-[14px] font-semibold rounded-lg min-w-[140px] justify-center px-4 shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-all duration-300 bg-[var(--btn-bg)] text-[var(--btn-fg)] hover:bg-[var(--btn-fg)] hover:text-[var(--btn-bg)] min-[451px]:h-12 min-[451px]:text-[16px] min-[451px]:min-w-[180px]"
+                    style={
+                      {
+                        '--btn-bg': colors.primary,
+                        '--btn-fg': fontColor,
+                      } as React.CSSProperties
+                    }
                   >
                     <IconComponent size={18} />
                     {holiday.name.toLowerCase()}
