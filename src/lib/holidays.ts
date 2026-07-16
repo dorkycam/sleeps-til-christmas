@@ -81,16 +81,6 @@ export function getAllHolidaySlugs(): HolidaySlug[] {
 }
 
 /**
- * Check if a slug is a valid holiday
- *
- * @param slug - The slug to validate
- * @returns true if the slug exists in the holiday database
- */
-export function isValidHolidaySlug(slug: string): slug is HolidaySlug {
-  return slug in holidays;
-}
-
-/**
  * Get the default holiday (Christmas)
  *
  * @returns The default holiday object
