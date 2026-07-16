@@ -1,10 +1,12 @@
-import { HolidayPage } from '@/components';
-import type { Holiday } from '@/components/countdown/HolidayCountdown';
-import { getAllHolidaySlugs, getHolidayBySlug } from '@/lib/holidays';
-import { generateHolidayMetadata, generateHolidayViewport } from '@/lib/metadata';
+import React from 'react';
 import { Metadata, Viewport } from 'next';
 import { notFound } from 'next/navigation';
-import React from 'react';
+
+import { HolidayPage } from '@/components';
+import { getAllHolidaySlugs, getHolidayBySlug } from '@/lib/holidays';
+import { generateHolidayMetadata, generateHolidayViewport } from '@/lib/metadata';
+
+import type { Holiday } from '@/components/countdown/HolidayCountdown';
 
 interface HolidayPageProps {
   params: Promise<{ slug: string }>;

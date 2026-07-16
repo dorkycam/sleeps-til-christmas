@@ -1,7 +1,8 @@
+import { Metadata, Viewport } from 'next';
+
 import { HolidayPage } from '@/components';
 import { getHolidayBySlugSafe } from '@/lib/holidays';
 import { generateHolidayMetadata, generateHolidayViewport } from '@/lib/metadata';
-import { Metadata, Viewport } from 'next';
 
 /**
  * Generate metadata for the home page (the Christmas countdown).
