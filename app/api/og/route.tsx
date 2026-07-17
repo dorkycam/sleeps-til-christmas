@@ -1,7 +1,9 @@
-import { getHolidayBySlug } from '@/lib/holidays';
-import { holidayThemes } from '@/lib/themes/tokens';
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
+
+import { getHolidayBySlug } from '@/lib/holidays';
+import { getOgCopy } from '@/lib/og';
+import { holidayThemes } from '@/lib/themes/tokens';
 
 export const runtime = 'edge';
 
@@ -22,17 +24,7 @@ export async function GET(request: NextRequest) {
     const sleepsNumber = parseInt(sleeps, 10);
 
     // Dynamic text based on countdown
-    const countdownText =
-      sleepsNumber === 0
-        ? 'today!'
-        : sleepsNumber === 1
-          ? '1 sleep left'
-          : `${sleepsNumber} sleeps`;
-
-    const mainText =
-      sleepsNumber === 0
-        ? `Today is ${holiday.name}!`
-        : `${countdownText} Until ${holiday.name}`;
+    const { mainText } = getOgCopy(holiday.name, sleepsNumber);
 
     // Determine dimensions based on size parameter
     const isSmall = size === 'small';
@@ -59,6 +51,7 @@ export async function GET(request: NextRequest) {
           {/* Main countdown number */}
           <div
             style={{
+              display: 'flex',
               fontSize: (sleepsNumber > 99 ? 120 : 180) * fontScale + 'px',
               fontWeight: 900,
               color: colors.text,
@@ -73,6 +66,7 @@ export async function GET(request: NextRequest) {
           {/* Main text */}
           <div
             style={{
+              display: 'flex',
               fontSize: 48 * fontScale + 'px',
               fontWeight: 700,
               color: colors.text,
@@ -88,6 +82,7 @@ export async function GET(request: NextRequest) {
           {/* Subtitle */}
           <div
             style={{
+              display: 'flex',
               fontSize: 28 * fontScale + 'px',
               fontWeight: 500,
               color: colors.text,
@@ -104,6 +99,7 @@ export async function GET(request: NextRequest) {
           {/* Site branding */}
           <div
             style={{
+              display: 'flex',
               position: 'absolute',
               bottom: 40 * fontScale + 'px',
               right: 40 * fontScale + 'px',
