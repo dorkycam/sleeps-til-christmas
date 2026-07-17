@@ -8,6 +8,10 @@ import { generateHolidayMetadata, generateHolidayViewport } from '@/lib/metadata
 
 import type { Holiday } from '@/components/countdown/HolidayCountdown';
 
+// Revalidate hourly so the sleep count in the page <title> and metadata stays
+// current (the count changes once a day). The OG card computes its own count.
+export const revalidate = 3600;
+
 interface HolidayPageProps {
   params: Promise<{ slug: string }>;
 }

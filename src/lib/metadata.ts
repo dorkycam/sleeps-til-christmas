@@ -15,18 +15,18 @@ const baseUrl = 'https://sleepstilchristmas.com';
  * that include the current countdown and holiday-specific theming.
  */
 export function generateHolidayMetadata(holiday: Holiday): Metadata {
-  const { sleepsUntil } = calculateHolidayCountdown(holiday);
+  const { sleepsUntil, isToday } = calculateHolidayCountdown(holiday);
   const description = getHolidayDescription(holiday);
   const colors = holidayThemes[holiday.theme];
 
-  // Number-less title: for statically generated pages the sleep count would be
-  // baked in at build time and go stale, so it is intentionally kept out of the
-  // page <title>. The live count is shown in the on-page countdown UI, not the
-  // browser tab.
-  const pageTitle =
-    holiday.slug === 'christmas'
-      ? "sleeps 'til christmas"
-      : `sleeps 'til ${holiday.name}`;
+  // Title carries the live sleep count. The pages use ISR (see `revalidate` in
+  // the route files), so the statically generated title is regenerated
+  // periodically and stays current instead of freezing at build time. Set via
+  // title.absolute so the layout's "%s | ..." template does not double up the
+  // brand suffix.
+  const pageTitle = isToday
+    ? `Happy ${holiday.name}!`
+    : `${sleepsUntil} ${sleepsUntil === 1 ? 'sleep' : 'sleeps'} 'til ${holiday.name}`;
 
   // Keywords for SEO
   const keywords = [
@@ -57,7 +57,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       // Dynamic social card image (used by most platforms)
       images: [
         {
-          url: `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}`,
+          url: `/api/og?holiday=${holiday.slug}`,
           width: 1200,
           height: 630,
           alt: `${sleepsUntil} sleeps until ${holiday.name}`,
@@ -65,7 +65,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
         },
         // Smaller image for platforms that prefer it
         {
-          url: `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}&size=small`,
+          url: `/api/og?holiday=${holiday.slug}&size=small`,
           width: 600,
           height: 315,
           alt: `${sleepsUntil} sleeps until ${holiday.name}`,
@@ -83,7 +83,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       description,
       images: [
         {
-          url: `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}`,
+          url: `/api/og?holiday=${holiday.slug}`,
           alt: `${sleepsUntil} sleeps until ${holiday.name}`,
           width: 1200,
           height: 630,
@@ -112,7 +112,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       // Generic social media meta
       'social:title': pageTitle,
       'social:description': description,
-      'social:image': `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}`,
+      'social:image': `/api/og?holiday=${holiday.slug}`,
       'social:url':
         holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`,
     },

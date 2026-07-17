@@ -4,6 +4,10 @@ import { HolidayPage } from '@/components';
 import { getHolidayBySlugSafe } from '@/lib/holidays';
 import { generateHolidayMetadata, generateHolidayViewport } from '@/lib/metadata';
 
+// Revalidate hourly so the sleep count in the page <title> and metadata stays
+// current (the count changes once a day). The OG card computes its own count.
+export const revalidate = 3600;
+
 /**
  * Generate metadata for the home page (the Christmas countdown).
  */
