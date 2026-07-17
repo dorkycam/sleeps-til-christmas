@@ -81,7 +81,7 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
   if (!countdown.isLoaded) {
     return (
       <div className={CONTAINER_CLASS} style={themeVars}>
-        <h1 className="text-[96px] leading-none m-0 font-semibold text-[var(--holiday-text)] min-[451px]:text-[128px]">
+        <h1 className="text-[96px] leading-none m-0 font-bold text-[var(--holiday-text)] min-[451px]:text-[128px]">
           ...
         </h1>
       </div>
@@ -91,7 +91,7 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
   if (countdown.isHoliday) {
     return (
       <div className={CONTAINER_CLASS} style={themeVars}>
-        <h1 className="text-[48px] leading-none m-0 font-semibold text-[var(--holiday-text)] min-[451px]:text-[72px]">
+        <h1 className="text-[48px] leading-none m-0 font-bold text-[var(--holiday-text)] min-[451px]:text-[72px]">
           {holiday.message}
         </h1>
       </div>
@@ -103,7 +103,7 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
 
   return (
     <div className={CONTAINER_CLASS} style={themeVars}>
-      <h1 className="text-[128px] leading-none m-0 font-semibold text-[var(--holiday-text)] min-[451px]:text-[150px]">
+      <h1 className="text-[128px] leading-none m-0 font-bold text-[var(--holiday-text)] min-[451px]:text-[150px]">
         {countdownNumber}
       </h1>
       <h2 className="text-[36px] leading-[1.2] m-0 font-semibold text-[var(--holiday-text)] min-[451px]:text-[48px]">
