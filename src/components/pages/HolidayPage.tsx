@@ -6,11 +6,10 @@ import {
 } from '@/components/countdown/HolidayCountdown';
 import { ParticleBackground } from '@/components/effects/ParticleBackground';
 import { SafePageContainer } from '@/components/layout/SafePageContainer';
+import { SpotifyEmbed } from '@/components/media/SpotifyEmbed';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { holidayThemes } from '@/lib/themes/tokens';
-import { memo, useCallback, useMemo, useState } from 'react';
-import { Spotify } from 'react-spotify-embed';
-import styled from 'styled-components';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 
 enum SpotifyVisibilityState {
   Wide,
@@ -18,18 +17,19 @@ enum SpotifyVisibilityState {
   Hidden,
 }
 
-const StyledSpotify = styled(Spotify)`
-  width: 100%;
-  max-width: 500px;
-`;
-
 interface HolidayPageProps {
   holiday: Holiday;
 }
 
+/**
+ * Full holiday page: themed background, particles, countdown, and an optional
+ * Spotify embed toggled through three states on double-click.
+ *
+ * @param props - the holiday to render
+ */
 export const HolidayPage = memo(function HolidayPage({
   holiday,
-}: HolidayPageProps) {
+}: HolidayPageProps): React.JSX.Element {
   const { theme, spotifyLinks } = holiday;
   const [spotifyVisibility, setSpotifyVisibility] =
     useState<SpotifyVisibilityState>(SpotifyVisibilityState.Wide);
@@ -43,10 +43,11 @@ export const HolidayPage = memo(function HolidayPage({
   const footerContent = useMemo(() => {
     if (spotifyLinks && spotifyLinks.length > 0) {
       return (
-        <StyledSpotify
+        <SpotifyEmbed
+          className="w-full max-w-[500px] mx-auto"
           hidden={spotifyVisibility === SpotifyVisibilityState.Hidden}
           wide={spotifyVisibility === SpotifyVisibilityState.Wide}
-          link={spotifyLinks[0]} // Use the first link for the footer for now
+          link={spotifyLinks[0]}
         />
       );
     }

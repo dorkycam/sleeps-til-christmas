@@ -1,7 +1,10 @@
-import { getHolidayBySlug } from '@/lib/holidays';
-import { holidayThemes } from '@/lib/themes/tokens';
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
+
+import { getHolidayBySlug } from '@/lib/holidays';
+import { getOgCopy } from '@/lib/og';
+import { holidayThemes } from '@/lib/themes/tokens';
+import { calculateHolidayCountdown } from '@/lib/utils/countdown';
 
 export const runtime = 'edge';
 
@@ -9,8 +12,6 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const holidaySlug = searchParams.get('holiday') || 'christmas';
-    const sleeps =
-      searchParams.get('sleeps') || searchParams.get('days') || '0'; // Support both for backward compatibility
     const size = searchParams.get('size') || 'large'; // 'large' (1200x630) or 'small' (600x315)
 
     const holiday = getHolidayBySlug(holidaySlug);
@@ -19,20 +20,13 @@ export async function GET(request: NextRequest) {
     }
 
     const colors = holidayThemes[holiday.theme];
-    const sleepsNumber = parseInt(sleeps, 10);
+    // Compute the live count here (this edge route runs per request) so shared
+    // cards are always current, regardless of when the referencing page was
+    // last generated.
+    const { sleepsUntil: sleepsNumber } = calculateHolidayCountdown(holiday);
 
     // Dynamic text based on countdown
-    const countdownText =
-      sleepsNumber === 0
-        ? 'today!'
-        : sleepsNumber === 1
-          ? '1 sleep left'
-          : `${sleepsNumber} sleeps`;
-
-    const mainText =
-      sleepsNumber === 0
-        ? `Today is ${holiday.name}!`
-        : `${countdownText} Until ${holiday.name}`;
+    const { mainText } = getOgCopy(holiday.name, sleepsNumber);
 
     // Determine dimensions based on size parameter
     const isSmall = size === 'small';
@@ -59,6 +53,7 @@ export async function GET(request: NextRequest) {
           {/* Main countdown number */}
           <div
             style={{
+              display: 'flex',
               fontSize: (sleepsNumber > 99 ? 120 : 180) * fontScale + 'px',
               fontWeight: 900,
               color: colors.text,
@@ -73,6 +68,7 @@ export async function GET(request: NextRequest) {
           {/* Main text */}
           <div
             style={{
+              display: 'flex',
               fontSize: 48 * fontScale + 'px',
               fontWeight: 700,
               color: colors.text,
@@ -88,6 +84,7 @@ export async function GET(request: NextRequest) {
           {/* Subtitle */}
           <div
             style={{
+              display: 'flex',
               fontSize: 28 * fontScale + 'px',
               fontWeight: 500,
               color: colors.text,
@@ -104,6 +101,7 @@ export async function GET(request: NextRequest) {
           {/* Site branding */}
           <div
             style={{
+              display: 'flex',
               position: 'absolute',
               bottom: 40 * fontScale + 'px',
               right: 40 * fontScale + 'px',

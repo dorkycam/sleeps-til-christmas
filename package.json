@@ -2,41 +2,40 @@
   "name": "sleeps-til-christmas",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -- --port $PORT",
-    "lint": "next lint",
-    "server": "npm run build && npm run start",
-    "deploy": "eb deploy production -v"
+    "start": "next start",
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "dependencies": {
-    "@ant-design/cssinjs": "^1.24.0",
-    "@ant-design/nextjs-registry": "^1.1.0",
-    "@next/font": "^14.2.15",
-    "@tsparticles/engine": "^3.9.1",
-    "@tsparticles/react": "^3.0.0",
-    "@tsparticles/slim": "^3.9.1",
+    "@tsparticles/engine": "^4",
+    "@tsparticles/react": "^4",
+    "@tsparticles/slim": "^4",
     "@types/node": "^24.2.1",
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
-    "@types/styled-components": "^5.1.34",
-    "antd": "^5.26.7",
     "dayjs": "^1.11.13",
-    "eslint": "^9.33.0",
-    "eslint-config-next": "^15.4.6",
-    "next": "^15.4.6",
+    "eslint": "^9",
+    "eslint-config-next": "^16",
+    "lucide-react": "^1.23.0",
+    "next": "^16",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-spotify-embed": "^2.0.4",
-    "styled-components": "^6.1.19",
-    "tsparticles": "^3.9.1",
-    "typescript": "^5.9.2"
+    "tsparticles": "^4",
+    "typescript": "^6"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.39.0",
-    "@typescript-eslint/parser": "^8.39.0",
+    "@tailwindcss/postcss": "^4.3.2",
     "eslint-config-prettier": "^10.1.8",
-    "prettier": "^3.6.2"
-  }
+    "postcss": "^8.5.16",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^4.3.2",
+    "vitest": "^4.1.9"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

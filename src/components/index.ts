@@ -5,6 +5,9 @@ export * from './layout/SafePageContainer';
 export * from './pages/HolidayPage';
 export * from './pages/NotFoundPage';
 
+// Media Components
+export * from './media/SpotifyEmbed';
+
 // Countdown Components
 export * from './countdown/HolidayCountdown';
 
@@ -18,4 +21,3 @@ export * from './seo/StructuredData';
 // Removed ClientOnly exports - using modern Next.js patterns instead
 export * from '../lib/metadata';
 export * from '../lib/themes/tokens';
-export * from '../styles/antdTheme';

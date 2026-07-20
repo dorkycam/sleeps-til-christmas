@@ -1,166 +1,88 @@
 'use client';
 
+import React from 'react';
+import { Heart, Home, Smile, type LucideIcon } from 'lucide-react';
+import Link from 'next/link';
+
 import { SafePageContainer } from '@/components/layout/SafePageContainer';
 import { getAllHolidaySlugs, getHolidayBySlug } from '@/lib/holidays';
 import { holidayThemes } from '@/lib/themes/tokens';
-import { minTablet, minTabletLarge } from '@/styles/mediaQueries';
-import { HeartOutlined, HomeOutlined, SmileOutlined } from '@ant-design/icons';
-import { Button, Flex, Space, Typography } from 'antd';
-import Link from 'next/link';
-import styled from 'styled-components';
-
-const { Title, Text } = Typography;
-
-// Simple icon mapping
-const getIcon = (iconName: string) => {
-  const icons = {
-    home: HomeOutlined,
-    heart: HeartOutlined,
-    smile: SmileOutlined,
-  };
-  return icons[iconName as keyof typeof icons] || HomeOutlined;
-};
-
-// Clean styled components
-const ErrorNumber = styled(Title)`
-  font-size: 80px !important;
-  font-weight: 800 !important;
-  color: #4a5568 !important;
-  margin: 0 !important;
-  line-height: 1 !important;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-
-  @media ${minTablet} {
-    font-size: 120px !important;
-  }
-
-  @media ${minTabletLarge} {
-    font-size: 180px !important;
-  }
-`;
-
-const ErrorMessage = styled(Title)`
-  font-size: 18px !important;
-  font-weight: 600 !important;
-  color: #2d3748 !important;
-  margin: 0 0 12px 0 !important;
-
-  @media ${minTablet} {
-    font-size: 24px !important;
-    margin: 0 0 16px 0 !important;
-  }
-
-  @media ${minTabletLarge} {
-    font-size: 32px !important;
-  }
-`;
-
-const Description = styled(Text)`
-  font-size: 14px !important;
-  color: #4a5568 !important;
-  margin-bottom: 24px !important;
-  text-align: center !important;
-  line-height: 1.4 !important;
-
-  @media ${minTablet} {
-    font-size: 16px !important;
-    margin-bottom: 32px !important;
-  }
-
-  @media ${minTabletLarge} {
-    font-size: 18px !important;
-  }
-`;
-
-const HolidayButton = styled(Button)<{ $theme: string }>`
-  height: 40px !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  border-radius: 8px !important;
-  min-width: 140px !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-  transition: all 0.3s ease !important;
-
-  @media ${minTablet} {
-    height: 48px !important;
-    font-size: 16px !important;
-    min-width: 180px !important;
-  }
-
-  ${({ $theme }) => {
-    const colors = holidayThemes[$theme as keyof typeof holidayThemes];
-    const fontColor =
-      colors.background === colors.primary ? colors.text : colors.background;
-    const backgroundColor = colors.primary;
-
-    return `
-        background-color: ${backgroundColor} !important;
-        border-color: ${backgroundColor} !important;
-        color: ${fontColor} !important;
-        &:hover {
-          background-color: ${fontColor} !important;
-        border-color: ${backgroundColor} !important;
-        color: ${backgroundColor} !important;
-        }
-      `;
-  }}
-`;
 
 /**
- * 404 Not Found Page
+ * Map a holiday iconName to a lucide icon component.
  *
- * Simple, clean implementation following Next.js best practices.
- * Uses responsive design with styled-components and Ant Design.
+ * @param iconName - the holiday's iconName
+ * @returns a lucide icon component
  */
-export function NotFoundPage() {
+function getIcon(iconName: string): LucideIcon {
+  const icons: Record<string, LucideIcon> = {
+    home: Home,
+    heart: Heart,
+    smile: Smile,
+  };
+  return icons[iconName] ?? Home;
+}
+
+/**
+ * 404 Not Found page with links to each holiday countdown.
+ */
+export function NotFoundPage(): React.JSX.Element {
   return (
     <SafePageContainer background="linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)">
-      <Flex
-        vertical
-        justify="center"
-        align="center"
-        style={{ height: '100%', textAlign: 'center', gap: '24px' }}
-      >
-        <Space direction="vertical" size={16} align="center">
-          <ErrorNumber level={1}>404</ErrorNumber>
-          <ErrorMessage level={2}>Oops! Page not found</ErrorMessage>
-          <Description>
+      <div className="flex flex-col justify-center items-center h-full text-center gap-6">
+        <div className="flex flex-col items-center gap-4">
+          <h1 className="text-[80px] font-extrabold text-[#4a5568] m-0 leading-none [text-shadow:2px_2px_4px_rgba(0,0,0,0.1)] min-[451px]:text-[120px] min-[641px]:text-[180px]">
+            404
+          </h1>
+          <h2 className="text-[18px] font-semibold text-[#2d3748] m-0 mb-3 min-[451px]:text-[24px] min-[451px]:mb-4 min-[641px]:text-[32px]">
+            Oops! Page not found
+          </h2>
+          <p className="text-[14px] text-[#4a5568] mb-6 text-center leading-[1.4] min-[451px]:text-[16px] min-[451px]:mb-8 min-[641px]:text-[18px]">
             The page you&apos;re looking for seems to have wandered off into the
             holiday spirit.
             <br />
             Let&apos;s get you back to celebrating!
-          </Description>
-        </Space>
+          </p>
+        </div>
 
-        <Space direction="vertical" size={16} align="center">
-          <Text
-            style={{ fontSize: '16px', color: '#4a5568', marginBottom: '8px' }}
-          >
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-[16px] text-[#4a5568] mb-2">
             Try one of these festive destinations:
-          </Text>
+          </p>
 
-          <Space direction="vertical" size={12} align="center">
+          <div className="flex flex-col items-center gap-3">
             {getAllHolidaySlugs().map(slug => {
               const holiday = getHolidayBySlug(slug)!;
               const IconComponent = getIcon(holiday.iconName);
+              const colors = holidayThemes[holiday.theme];
+              const fontColor =
+                colors.background === colors.primary
+                  ? colors.text
+                  : colors.background;
               const isChristmas = slug === 'christmas';
               const href = isChristmas ? '/' : `/${slug}`;
 
               return (
-                <Link key={slug} href={href} style={{ textDecoration: 'none' }}>
-                  <HolidayButton
-                    type="primary"
-                    icon={<IconComponent />}
-                    $theme={holiday.theme}
+                <Link key={slug} href={href} className="no-underline">
+                  <button
+                    type="button"
+                    className="flex items-center gap-2 h-10 text-[14px] font-semibold rounded-lg min-w-[140px] justify-center px-4 shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-all duration-300 bg-[var(--btn-bg)] text-[var(--btn-fg)] hover:bg-[var(--btn-fg)] hover:text-[var(--btn-bg)] min-[451px]:h-12 min-[451px]:text-[16px] min-[451px]:min-w-[180px]"
+                    style={
+                      {
+                        '--btn-bg': colors.primary,
+                        '--btn-fg': fontColor,
+                      } as React.CSSProperties
+                    }
                   >
+                    <IconComponent size={18} />
                     {holiday.name.toLowerCase()}
-                  </HolidayButton>
+                  </button>
                 </Link>
               );
             })}
-          </Space>
-        </Space>
-      </Flex>
+          </div>
+        </div>
+      </div>
     </SafePageContainer>
   );
 }

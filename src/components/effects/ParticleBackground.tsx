@@ -1,13 +1,15 @@
 'use client';
 
 import { HolidayTheme, holidayThemes } from '@/lib/themes/tokens';
+import type { Engine } from '@tsparticles/engine';
 // Removed ClientOnly - using 'use client' directive for proper client-side rendering
 import Particles, {
-  initParticlesEngine,
   IParticlesProps,
+  ParticlesProvider,
+  useParticlesProvider,
 } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useSyncExternalStore } from 'react';
 
 // Inline styles to prevent hydration mismatches
 // Using CSS-in-JS objects ensures identical styling on server and client
@@ -79,6 +81,14 @@ const particleConfigs: Record<HolidayTheme, ParticleConfig> = {
     speed: 4, // Gentle movement
     size: { min: 4, max: 10 }, // Small to medium hearts
     shape: 'image', // Heart shapes
+    image: [
+      {
+        // Inline pink heart SVG (no external asset needed).
+        src: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Cpath%20fill='%23ff69b4'%20d='M23.6%202c-3.4%200-6.3%202.7-7.6%205.6C14.7%204.7%2011.8%202%208.4%202%203.8%202%200%205.8%200%2010.4c0%209%2016%2020%2016%2020s16-11%2016-20C32%205.8%2028.2%202%2023.6%202z'/%3E%3C/svg%3E",
+        width: 32,
+        height: 32,
+      },
+    ],
     direction: 'none', // Floating hearts
     onClick: 'repulse', // Push away on click
     onHover: 'attract', // Draw towards cursor (romantic)
@@ -122,51 +132,31 @@ interface ParticleBackgroundProps {
 }
 
 /**
- * Internal particle component that handles initialization
- * Separated from main component to ensure proper client-side rendering
+ * Registers the slim tsparticles bundle with the engine.
+ *
+ * Defined at module scope (rather than inline in a render) so the reference
+ * stays stable across renders, since `ParticlesProvider` requires its `init`
+ * callback to be stable across the app lifecycle.
  */
-function ParticleBackgroundInner({ theme }: ParticleBackgroundProps) {
-  // Track particle engine initialization state
-  const [init, setInit] = useState(false);
-  // Track client-side mounting to prevent SSR issues
-  const [mounted, setMounted] = useState(false);
+async function initEngine(engine: Engine): Promise<void> {
+  await loadSlim(engine);
+}
 
-  // Set mounted flag after component mounts
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Initialize particle engine only after mounting
-  useEffect(() => {
-    if (!mounted) return;
-
-    const initEngine = async () => {
-      try {
-        // Initialize particles engine with slim bundle (smaller size)
-        await initParticlesEngine(async engine => {
-          await loadSlim(engine);
-        });
-        setInit(true);
-      } catch (error) {
-        console.error('Failed to initialize particles:', error);
-      }
-    };
-
-    initEngine();
-  }, [mounted]);
+/**
+ * Renders the themed particles once the shared tsparticles engine (provided
+ * by the parent `ParticlesProvider`) has finished loading. Shows a
+ * placeholder in the meantime to avoid a layout shift.
+ */
+function ParticlesLayer({ theme }: { theme: HolidayTheme }) {
+  const { loaded } = useParticlesProvider();
 
   // Callback when particles are loaded (can add custom logic here)
   const particlesLoaded = useCallback(async () => {
     // Optional: Add any initialization logic here
   }, []);
 
-  // Show placeholder while not mounted (prevents hydration mismatch)
-  if (!mounted) {
-    return <div style={placeholderStyle} />;
-  }
-
   // Show placeholder while particle engine initializes
-  if (!init) {
+  if (!loaded) {
     return <div style={placeholderStyle} />;
   }
 
@@ -177,11 +167,6 @@ function ParticleBackgroundInner({ theme }: ParticleBackgroundProps) {
   // Build particle configuration object
   const particleOptions: IParticlesProps['options'] = {
     autoPlay: true,
-    background: {
-      color: {
-        value: colors.background,
-      },
-    },
     fpsLimit: 120,
     interactivity: {
       events: {
@@ -257,6 +242,46 @@ function ParticleBackgroundInner({ theme }: ParticleBackgroundProps) {
       options={particleOptions}
       particlesLoaded={particlesLoaded}
     />
+  );
+}
+
+function subscribeNoop(): () => void {
+  return () => {};
+}
+
+/**
+ * Reports whether the component has hydrated on the client.
+ *
+ * Uses `useSyncExternalStore` (rather than `useState` + `useEffect`) so the
+ * client/server snapshot mismatch is resolved by React itself instead of by
+ * synchronously calling `setState` inside an effect, which can trigger
+ * cascading renders.
+ */
+function useMounted(): boolean {
+  return useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false,
+  );
+}
+
+/**
+ * Internal particle component that handles initialization
+ * Separated from main component to ensure proper client-side rendering
+ */
+function ParticleBackgroundInner({ theme }: ParticleBackgroundProps) {
+  // Track client-side mounting to prevent SSR issues
+  const mounted = useMounted();
+
+  // Show placeholder while not mounted (prevents hydration mismatch)
+  if (!mounted) {
+    return <div style={placeholderStyle} />;
+  }
+
+  return (
+    <ParticlesProvider init={initEngine}>
+      <ParticlesLayer theme={theme} />
+    </ParticlesProvider>
   );
 }
 
