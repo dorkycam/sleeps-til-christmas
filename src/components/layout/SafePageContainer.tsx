@@ -23,13 +23,13 @@ export function SafePageContainer({
 }: SafePageContainerProps): React.JSX.Element {
   return (
     <main
-      className="relative h-screen min-h-screen w-full overflow-hidden box-border p-[clamp(16px,4vw,32px)]"
+      className="relative h-screen min-h-screen w-full overflow-hidden box-border p-fluid"
       style={{ background: background || 'transparent' }}
       onDoubleClick={onDoubleClick}
     >
       {children}
       {footerContent && (
-        <footer className="fixed bottom-0 left-0 right-0 z-[1000] p-[25px] text-center bg-transparent">
+        <footer className="fixed bottom-0 left-0 right-0 z-[1000] p-6 text-center bg-transparent">
           {footerContent}
         </footer>
       )}

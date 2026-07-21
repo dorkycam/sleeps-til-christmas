@@ -1,14 +1,16 @@
 'use client';
 
+import { memo, useEffect, useState } from 'react';
+import type { JSX } from 'react';
+import dayjs from 'dayjs';
+
 import { holidayCssVars } from '@/lib/themes/holidayStyle';
 import {
   calculateHolidayCountdown,
   getCountdownLabel,
   getCountdownNumber,
 } from '@/lib/utils/countdown';
-import { HolidayTheme } from '@/lib/themes/tokens';
-import dayjs from 'dayjs';
-import { memo, useEffect, useState } from 'react';
+import type { HolidayTheme } from '@/lib/themes/tokens';
 
 // Icon name types for better type safety
 export type IconName =
@@ -48,7 +50,7 @@ interface CountdownState {
 const CONTAINER_CLASS =
   'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center z-10 flex flex-col items-center justify-center';
 
-function CountdownInner({ holiday }: HolidayCountdownProps) {
+function CountdownInner({ holiday }: HolidayCountdownProps): JSX.Element {
   const [countdown, setCountdown] = useState<CountdownState>(() => {
     const { sleepsUntil, isToday: isHoliday } =
       calculateHolidayCountdown(holiday);
@@ -81,7 +83,7 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
   if (!countdown.isLoaded) {
     return (
       <div className={CONTAINER_CLASS} style={themeVars}>
-        <h1 className="text-[96px] leading-none m-0 font-bold text-[var(--holiday-text)] min-[451px]:text-[128px]">
+        <h1 className="text-8xl leading-none m-0 font-bold text-[var(--holiday-text)] min-[451px]:text-9xl">
           ...
         </h1>
       </div>
@@ -91,7 +93,7 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
   if (countdown.isHoliday) {
     return (
       <div className={CONTAINER_CLASS} style={themeVars}>
-        <h1 className="text-[48px] leading-none m-0 font-bold text-[var(--holiday-text)] min-[451px]:text-[72px]">
+        <h1 className="text-5xl leading-none m-0 font-bold text-[var(--holiday-text)] min-[451px]:text-7xl">
           {holiday.message}
         </h1>
       </div>
@@ -103,10 +105,10 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
 
   return (
     <div className={CONTAINER_CLASS} style={themeVars}>
-      <h1 className="text-[128px] leading-none m-0 font-bold text-[var(--holiday-text)] min-[451px]:text-[150px]">
+      <h1 className="text-9xl leading-none m-0 font-bold text-[var(--holiday-text)] min-[451px]:text-10xl">
         {countdownNumber}
       </h1>
-      <h2 className="text-[36px] leading-[1.2] m-0 font-semibold text-[var(--holiday-text)] min-[451px]:text-[48px]">
+      <h2 className="text-4xl leading-[1.2] m-0 font-semibold text-[var(--holiday-text)] min-[451px]:text-5xl">
         {countdownLabel}
       </h2>
     </div>
@@ -120,6 +122,6 @@ function CountdownInner({ holiday }: HolidayCountdownProps) {
  */
 export const HolidayCountdown = memo(function HolidayCountdown(
   props: HolidayCountdownProps,
-) {
+): JSX.Element {
   return <CountdownInner {...props} />;
 });

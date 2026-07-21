@@ -1,12 +1,13 @@
-'use client';
-
 import React from 'react';
-import { Heart, Home, Smile, type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
+import { Heart, Home, Smile, type LucideIcon } from 'lucide-react';
 
 import { SafePageContainer } from '@/components/layout/SafePageContainer';
 import { getAllHolidaySlugs, getHolidayBySlug } from '@/lib/holidays';
-import { holidayThemes } from '@/lib/themes/tokens';
+import { holidayThemes, uiColors } from '@/lib/themes/tokens';
+
+/** Neutral 404 backdrop, built from the shared UI color tokens. */
+const NOT_FOUND_BACKGROUND = `linear-gradient(135deg, ${uiColors.notFoundGradientFrom} 0%, ${uiColors.notFoundGradientTo} 100%)`;
 
 /**
  * Map a holiday iconName to a lucide icon component.
@@ -28,16 +29,24 @@ function getIcon(iconName: string): LucideIcon {
  */
 export function NotFoundPage(): React.JSX.Element {
   return (
-    <SafePageContainer background="linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)">
-      <div className="flex flex-col justify-center items-center h-full text-center gap-6">
+    <SafePageContainer background={NOT_FOUND_BACKGROUND}>
+      <div
+        className="flex flex-col justify-center items-center h-full text-center gap-6 text-[var(--nf-muted)]"
+        style={
+          {
+            '--nf-muted': uiColors.textMuted,
+            '--nf-strong': uiColors.textStrong,
+          } as React.CSSProperties
+        }
+      >
         <div className="flex flex-col items-center gap-4">
-          <h1 className="text-[80px] font-extrabold text-[#4a5568] m-0 leading-none [text-shadow:2px_2px_4px_rgba(0,0,0,0.1)] min-[451px]:text-[120px] min-[641px]:text-[180px]">
+          <h1 className="text-8xl font-extrabold text-[var(--nf-muted)] m-0 leading-none text-shadow-soft min-[451px]:text-9xl min-[641px]:text-10xl">
             404
           </h1>
-          <h2 className="text-[18px] font-semibold text-[#2d3748] m-0 mb-3 min-[451px]:text-[24px] min-[451px]:mb-4 min-[641px]:text-[32px]">
+          <h2 className="text-lg font-semibold text-[var(--nf-strong)] m-0 mb-3 min-[451px]:text-2xl min-[451px]:mb-4 min-[641px]:text-3xl">
             Oops! Page not found
           </h2>
-          <p className="text-[14px] text-[#4a5568] mb-6 text-center leading-[1.4] min-[451px]:text-[16px] min-[451px]:mb-8 min-[641px]:text-[18px]">
+          <p className="text-sm text-[var(--nf-muted)] mb-6 text-center leading-[1.4] min-[451px]:text-base min-[451px]:mb-8 min-[641px]:text-lg">
             The page you&apos;re looking for seems to have wandered off into the
             holiday spirit.
             <br />
@@ -46,7 +55,7 @@ export function NotFoundPage(): React.JSX.Element {
         </div>
 
         <div className="flex flex-col items-center gap-4">
-          <p className="text-[16px] text-[#4a5568] mb-2">
+          <p className="text-base text-[var(--nf-muted)] mb-2">
             Try one of these festive destinations:
           </p>
 
@@ -66,7 +75,7 @@ export function NotFoundPage(): React.JSX.Element {
                 <Link key={slug} href={href} className="no-underline">
                   <button
                     type="button"
-                    className="flex items-center gap-2 h-10 text-[14px] font-semibold rounded-lg min-w-[140px] justify-center px-4 shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-all duration-300 bg-[var(--btn-bg)] text-[var(--btn-fg)] hover:bg-[var(--btn-fg)] hover:text-[var(--btn-bg)] min-[451px]:h-12 min-[451px]:text-[16px] min-[451px]:min-w-[180px]"
+                    className="flex items-center gap-2 h-10 text-sm font-semibold rounded-lg min-w-35 justify-center px-4 shadow-btn transition-all duration-300 bg-[var(--btn-bg)] text-[var(--btn-fg)] hover:bg-[var(--btn-fg)] hover:text-[var(--btn-bg)] min-[451px]:h-12 min-[451px]:text-base min-[451px]:min-w-45"
                     style={
                       {
                         '--btn-bg': colors.primary,

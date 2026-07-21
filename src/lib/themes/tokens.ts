@@ -126,6 +126,17 @@ export const holidayThemes = {
   },
 } as const;
 
+/**
+ * Neutral UI colors used outside the holiday themes (e.g. the 404 page), kept
+ * here so no component hardcodes hex literals inline.
+ */
+export const uiColors = {
+  notFoundGradientFrom: '#f5f7fa',
+  notFoundGradientTo: '#c3cfe2',
+  textMuted: '#4a5568',
+  textStrong: '#2d3748',
+} as const;
+
 // Type definitions for theme system
 export type HolidayTheme = keyof typeof holidayThemes;
 export type TokenPath = keyof typeof tokens;

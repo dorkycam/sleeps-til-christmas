@@ -1,12 +1,13 @@
+import { Metadata, Viewport } from 'next';
+
 import { Holiday } from '@/components/countdown/HolidayCountdown';
 import {
   calculateHolidayCountdown,
   getHolidayDescription,
 } from '@/lib/utils/countdown';
-import { Metadata, Viewport } from 'next';
-import { holidayThemes } from './themes/tokens';
+import { getHolidayUrl } from '@/lib/urls';
 
-const baseUrl = 'https://sleepstilchristmas.com';
+import { holidayThemes } from './themes/tokens';
 
 /**
  * Generate dynamic metadata for holiday pages
@@ -48,8 +49,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
     openGraph: {
       title: pageTitle,
       description,
-      url:
-        holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`,
+      url: getHolidayUrl(holiday),
       siteName: "sleeps 'til christmas",
       type: 'website',
       locale: 'en_US',
@@ -113,8 +113,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       'social:title': pageTitle,
       'social:description': description,
       'social:image': `/api/og?holiday=${holiday.slug}`,
-      'social:url':
-        holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`,
+      'social:url': getHolidayUrl(holiday),
     },
 
     // Additional SEO tags
@@ -132,8 +131,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
 
     // Canonical URL
     alternates: {
-      canonical:
-        holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`,
+      canonical: getHolidayUrl(holiday),
     },
 
     // Apple/iOS specific tags

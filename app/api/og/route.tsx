@@ -8,7 +8,7 @@ import { calculateHolidayCountdown } from '@/lib/utils/countdown';
 
 export const runtime = 'edge';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<Response> {
   try {
     const { searchParams } = new URL(request.url);
     const holidaySlug = searchParams.get('holiday') || 'christmas';

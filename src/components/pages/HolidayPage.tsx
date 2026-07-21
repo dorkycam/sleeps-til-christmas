@@ -1,5 +1,7 @@
 'use client';
 
+import React, { memo, useCallback, useMemo, useState } from 'react';
+
 import {
   Holiday,
   HolidayCountdown,
@@ -9,13 +11,13 @@ import { SafePageContainer } from '@/components/layout/SafePageContainer';
 import { SpotifyEmbed } from '@/components/media/SpotifyEmbed';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { holidayThemes } from '@/lib/themes/tokens';
-import React, { memo, useCallback, useMemo, useState } from 'react';
 
-enum SpotifyVisibilityState {
-  Wide,
-  Card,
-  Hidden,
-}
+/**
+ * The three Spotify embed layouts, cycled on double-click:
+ * wide (full-width bar) -> card (compact) -> hidden.
+ */
+const SPOTIFY_VISIBILITY = ['wide', 'card', 'hidden'] as const;
+type SpotifyVisibility = (typeof SPOTIFY_VISIBILITY)[number];
 
 interface HolidayPageProps {
   holiday: Holiday;
@@ -32,12 +34,14 @@ export const HolidayPage = memo(function HolidayPage({
 }: HolidayPageProps): React.JSX.Element {
   const { theme, spotifyLinks } = holiday;
   const [spotifyVisibility, setSpotifyVisibility] =
-    useState<SpotifyVisibilityState>(SpotifyVisibilityState.Wide);
+    useState<SpotifyVisibility>('wide');
 
   const handleDoubleClick = useCallback(() => {
-    setSpotifyVisibility(prev =>
-      prev === SpotifyVisibilityState.Hidden ? 0 : prev + 1,
-    );
+    setSpotifyVisibility(prev => {
+      const nextIndex =
+        (SPOTIFY_VISIBILITY.indexOf(prev) + 1) % SPOTIFY_VISIBILITY.length;
+      return SPOTIFY_VISIBILITY[nextIndex];
+    });
   }, []);
 
   const footerContent = useMemo(() => {
@@ -45,8 +49,8 @@ export const HolidayPage = memo(function HolidayPage({
       return (
         <SpotifyEmbed
           className="w-full max-w-[500px] mx-auto"
-          hidden={spotifyVisibility === SpotifyVisibilityState.Hidden}
-          wide={spotifyVisibility === SpotifyVisibilityState.Wide}
+          hidden={spotifyVisibility === 'hidden'}
+          wide={spotifyVisibility === 'wide'}
           link={spotifyLinks[0]}
         />
       );

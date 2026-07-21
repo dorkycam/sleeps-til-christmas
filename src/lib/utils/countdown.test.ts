@@ -1,10 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import type { Holiday } from '@/components/countdown/HolidayCountdown';
+
 import {
   calculateHolidayCountdown,
   formatCountdownTitle,
   getCountdownLabel,
+  getHolidayDescription,
 } from './countdown';
-import type { Holiday } from '@/components/countdown/HolidayCountdown';
 
 const christmas: Holiday = {
   slug: 'christmas',
@@ -75,5 +78,33 @@ describe('formatCountdownTitle', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 11, 20, 9, 0, 0));
     expect(formatCountdownTitle(christmas)).toBe("5 Sleeps 'til christmas");
+  });
+});
+
+describe('getHolidayDescription', () => {
+  afterEach(() => vi.useRealTimers());
+
+  it('celebrates on the day', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 11, 25, 9, 0, 0)); // Dec 25, 2026
+    expect(getHolidayDescription(christmas)).toBe(
+      'Today is christmas! Merry Christmas!',
+    );
+  });
+
+  it('uses singular "sleep" with one sleep left', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 11, 24, 9, 0, 0)); // Dec 24, 2026
+    expect(getHolidayDescription(christmas)).toBe(
+      'Only 1 sleep left until christmas! Merry Christmas!',
+    );
+  });
+
+  it('uses plural "sleeps" with more than one sleep left', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 11, 20, 9, 0, 0)); // Dec 20, 2026
+    expect(getHolidayDescription(christmas)).toBe(
+      '5 sleeps until christmas! Track the countdown and get ready to celebrate.',
+    );
   });
 });

@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 import { Metadata, Viewport } from 'next';
 
 import { HolidayPage } from '@/components';
@@ -24,7 +25,7 @@ export function generateViewport(): Viewport {
   return generateHolidayViewport(holiday);
 }
 
-export default function Home() {
+export default function Home(): JSX.Element {
   const holiday = getHolidayBySlugSafe('christmas');
   return <HolidayPage holiday={holiday} />;
 }

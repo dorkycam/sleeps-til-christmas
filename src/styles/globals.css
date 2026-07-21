@@ -1,5 +1,22 @@
 @import 'tailwindcss';
 
+@theme {
+  /* Tailwind's default type scale already covers text-xs..text-9xl (up to
+     128px). This adds the app's hero size. Mirrors the fontSize scale in
+     src/lib/themes/tokens.ts. */
+  --text-10xl: 150px;
+
+  /* Fluid page padding: min 16px, ~4vw, max 32px (tokens.ts spacing md..xl). */
+  --spacing-fluid: clamp(16px, 4vw, 32px);
+
+  /* Soft drop shadow for interactive buttons. */
+  --shadow-btn: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+@utility text-shadow-soft {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 html,
 body {
   overflow-x: hidden;

@@ -1,4 +1,7 @@
+import type { JSX } from 'react';
+
 import { Holiday } from '@/components/countdown/HolidayCountdown';
+import { BASE_URL, getHolidayUrl } from '@/lib/urls';
 import {
   formatCountdownTitle,
   getCountdownLabel,
@@ -15,13 +18,11 @@ interface StructuredDataProps {
  * Helps search engines understand the content and may enable
  * rich snippets in search results.
  */
-export function StructuredData({ holiday }: StructuredDataProps) {
+export function StructuredData({ holiday }: StructuredDataProps): JSX.Element {
   const countdownNumber = getCountdownNumber(holiday);
   const countdownLabel = getCountdownLabel(holiday);
   const title = formatCountdownTitle(holiday);
-  const baseUrl = 'https://sleepstilchristmas.com';
-  const pageUrl =
-    holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`;
+  const pageUrl = getHolidayUrl(holiday);
 
   const structuredData = {
     '@context': 'https://schema.org',
@@ -45,7 +46,7 @@ export function StructuredData({ holiday }: StructuredDataProps) {
     publisher: {
       '@type': 'Organization',
       name: "sleeps 'til christmas",
-      url: baseUrl,
+      url: BASE_URL,
     },
     breadcrumb: {
       '@type': 'BreadcrumbList',
@@ -54,7 +55,7 @@ export function StructuredData({ holiday }: StructuredDataProps) {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: baseUrl,
+          item: BASE_URL,
         },
         ...(holiday.slug !== 'christmas'
           ? [

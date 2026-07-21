@@ -1,5 +1,6 @@
-import { Holiday } from '@/components/countdown/HolidayCountdown';
 import dayjs from 'dayjs';
+
+import { Holiday } from '@/components/countdown/HolidayCountdown';
 
 export interface CountdownResult {
   sleepsUntil: number;
