@@ -3,7 +3,9 @@ Allow: /
 Allow: /halloween
 Allow: /valentines-day
 
-# Disallow any potential admin or API routes
+# Social crawlers (e.g. Twitterbot) honor robots.txt, so the share card
+# image route must stay reachable even though other API routes are blocked.
+Allow: /api/og
 Disallow: /api/
 
 # Sitemap location

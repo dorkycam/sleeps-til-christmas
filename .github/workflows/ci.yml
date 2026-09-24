@@ -35,6 +35,9 @@ jobs:
       - name: Run linting
         run: yarn lint
 
+      - name: Run tests
+        run: yarn test
+
       - name: Build application
         run: yarn build
 

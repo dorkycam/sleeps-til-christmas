@@ -14,13 +14,7 @@ import type { HolidayTheme } from '@/lib/themes/tokens';
 
 // Icon name types for better type safety
 export type IconName =
-  | 'home'
-  | 'heart'
-  | 'smile'
-  | 'fireworks'
-  | 'tree'
-  | 'pumpkin'
-  | 'gift';
+  'home' | 'heart' | 'smile' | 'fireworks' | 'tree' | 'pumpkin' | 'gift';
 
 /**
  * Holiday configuration interface
@@ -63,17 +57,21 @@ function CountdownInner({ holiday }: HolidayCountdownProps): JSX.Element {
       setCountdown({ sleepsUntil, isHoliday: isToday, isLoaded: true });
     };
 
+    // Re-arm a timeout for each upcoming midnight so the count ticks over at
+    // the day boundary. A single handle is tracked so cleanup always clears
+    // whichever timer is pending.
+    let timeout: ReturnType<typeof setTimeout>;
+    const scheduleNextMidnight = (): void => {
+      const now = dayjs();
+      const msUntilMidnight = now.add(1, 'day').startOf('day').diff(now);
+      timeout = setTimeout(() => {
+        updateCountdown();
+        scheduleNextMidnight();
+      }, msUntilMidnight);
+    };
+
     updateCountdown();
-
-    const now = dayjs();
-    const tomorrow = now.add(1, 'day').startOf('day');
-    const msUntilMidnight = tomorrow.diff(now);
-
-    const timeout = setTimeout(() => {
-      updateCountdown();
-      const interval = setInterval(updateCountdown, 24 * 60 * 60 * 1000);
-      return () => clearInterval(interval);
-    }, msUntilMidnight);
+    scheduleNextMidnight();
 
     return () => clearTimeout(timeout);
   }, [holiday]);

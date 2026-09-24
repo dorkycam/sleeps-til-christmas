@@ -3,6 +3,7 @@ import type { JSX } from 'react';
 import { Holiday } from '@/components/countdown/HolidayCountdown';
 import { BASE_URL, getHolidayUrl } from '@/lib/urls';
 import {
+  calculateHolidayCountdown,
   formatCountdownTitle,
   getCountdownLabel,
   getCountdownNumber,
@@ -34,13 +35,8 @@ export function StructuredData({ holiday }: StructuredDataProps): JSX.Element {
       '@type': 'Event',
       name: holiday.name,
       description: holiday.message,
-      startDate: new Date(
-        new Date().getFullYear(),
-        holiday.month - 1,
-        holiday.day,
-      )
-        .toISOString()
-        .split('T')[0],
+      startDate:
+        calculateHolidayCountdown(holiday).targetDate.format('YYYY-MM-DD'),
       eventStatus: 'https://schema.org/EventScheduled',
     },
     publisher: {

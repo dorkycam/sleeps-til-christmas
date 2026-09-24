@@ -1,28 +1,36 @@
 import React from 'react';
 import Link from 'next/link';
-import { Heart, Home, Smile, type LucideIcon } from 'lucide-react';
+import {
+  Ghost,
+  Gift,
+  Heart,
+  House,
+  Smile,
+  Sparkles,
+  TreePine,
+  type LucideIcon,
+} from 'lucide-react';
 
 import { SafePageContainer } from '@/components/layout/SafePageContainer';
-import { getAllHolidaySlugs, getHolidayBySlug } from '@/lib/holidays';
+import { getAllHolidaySlugs, getHolidayBySlugSafe } from '@/lib/holidays';
 import { holidayThemes, uiColors } from '@/lib/themes/tokens';
+import { getHolidayPath } from '@/lib/urls';
+
+import type { IconName } from '@/components/countdown/HolidayCountdown';
 
 /** Neutral 404 backdrop, built from the shared UI color tokens. */
 const NOT_FOUND_BACKGROUND = `linear-gradient(135deg, ${uiColors.notFoundGradientFrom} 0%, ${uiColors.notFoundGradientTo} 100%)`;
 
-/**
- * Map a holiday iconName to a lucide icon component.
- *
- * @param iconName - the holiday's iconName
- * @returns a lucide icon component
- */
-function getIcon(iconName: string): LucideIcon {
-  const icons: Record<string, LucideIcon> = {
-    home: Home,
-    heart: Heart,
-    smile: Smile,
-  };
-  return icons[iconName] ?? Home;
-}
+/** Lucide icon for each holiday iconName. Typed so a new IconName must be mapped. */
+const HOLIDAY_ICONS: Record<IconName, LucideIcon> = {
+  home: House,
+  heart: Heart,
+  smile: Smile,
+  fireworks: Sparkles,
+  tree: TreePine,
+  pumpkin: Ghost,
+  gift: Gift,
+};
 
 /**
  * 404 Not Found page with links to each holiday countdown.
@@ -61,31 +69,28 @@ export function NotFoundPage(): React.JSX.Element {
 
           <div className="flex flex-col items-center gap-3">
             {getAllHolidaySlugs().map(slug => {
-              const holiday = getHolidayBySlug(slug)!;
-              const IconComponent = getIcon(holiday.iconName);
+              const holiday = getHolidayBySlugSafe(slug);
+              const IconComponent = HOLIDAY_ICONS[holiday.iconName];
               const colors = holidayThemes[holiday.theme];
               const fontColor =
                 colors.background === colors.primary
                   ? colors.text
                   : colors.background;
-              const isChristmas = slug === 'christmas';
-              const href = isChristmas ? '/' : `/${slug}`;
 
               return (
-                <Link key={slug} href={href} className="no-underline">
-                  <button
-                    type="button"
-                    className="flex items-center gap-2 h-10 text-sm font-semibold rounded-lg min-w-35 justify-center px-4 shadow-btn transition-all duration-300 bg-[var(--btn-bg)] text-[var(--btn-fg)] hover:bg-[var(--btn-fg)] hover:text-[var(--btn-bg)] min-[451px]:h-12 min-[451px]:text-base min-[451px]:min-w-45"
-                    style={
-                      {
-                        '--btn-bg': colors.primary,
-                        '--btn-fg': fontColor,
-                      } as React.CSSProperties
-                    }
-                  >
-                    <IconComponent size={18} />
-                    {holiday.name.toLowerCase()}
-                  </button>
+                <Link
+                  key={slug}
+                  href={getHolidayPath(holiday)}
+                  className="flex items-center gap-2 h-10 text-sm font-semibold rounded-lg min-w-35 justify-center px-4 shadow-btn transition-all duration-300 bg-[var(--btn-bg)] text-[var(--btn-fg)] hover:bg-[var(--btn-fg)] hover:text-[var(--btn-bg)] min-[451px]:h-12 min-[451px]:text-base min-[451px]:min-w-45"
+                  style={
+                    {
+                      '--btn-bg': colors.primary,
+                      '--btn-fg': fontColor,
+                    } as React.CSSProperties
+                  }
+                >
+                  <IconComponent size={18} />
+                  {holiday.name.toLowerCase()}
                 </Link>
               );
             })}

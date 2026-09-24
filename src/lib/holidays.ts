@@ -58,7 +58,20 @@ export const holidays = {
  * @returns Holiday object or undefined if not found
  */
 export function getHolidayBySlug(slug: string): Holiday | undefined {
-  return holidays[slug as HolidaySlug];
+  return isHolidaySlug(slug) ? holidays[slug] : undefined;
+}
+
+/**
+ * Narrow an arbitrary string to a known holiday slug.
+ *
+ * Uses an own-property check so inherited object keys such as `constructor`
+ * or `toString` are not mistaken for holidays.
+ *
+ * @param slug - candidate slug, e.g. from a URL
+ * @returns true if the slug names a holiday
+ */
+function isHolidaySlug(slug: string): slug is HolidaySlug {
+  return Object.hasOwn(holidays, slug);
 }
 
 /**
