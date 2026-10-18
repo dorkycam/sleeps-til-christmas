@@ -1,8 +1,8 @@
+import { NotFoundPage } from '@/components/NotFoundPage';
+import { generate404Metadata } from '@/lib/metadata';
+
 import type { JSX } from 'react';
 import type { Metadata } from 'next';
-
-import { NotFoundPage } from '@/components';
-import { generate404Metadata } from '@/lib/metadata';
 
 /**
  * Metadata for the 404 page (noindex, no sleep count).

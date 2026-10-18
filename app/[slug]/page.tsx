@@ -1,16 +1,21 @@
-import React from 'react';
-import { Metadata, Viewport } from 'next';
 import { notFound } from 'next/navigation';
 
-import { HolidayPage } from '@/components';
+import { HolidayPage } from '@/components/HolidayPage';
 import { getAllHolidaySlugs, getHolidayBySlug } from '@/lib/holidays';
-import { generateHolidayMetadata, generateHolidayViewport } from '@/lib/metadata';
+import {
+  generateHolidayMetadata,
+  generateHolidayViewport,
+} from '@/lib/metadata';
+import { HOME_HOLIDAY_SLUG, isHomeHoliday } from '@/lib/urls';
 
-import type { Holiday } from '@/components/countdown/HolidayCountdown';
+import type { JSX } from 'react';
+import type { Metadata, Viewport } from 'next';
+import type { Holiday } from '@/lib/holidays';
 
-// Revalidate hourly so the sleep count in the page <title> and metadata stays
-// current (the count changes once a day). The OG card computes its own count.
-export const revalidate = 3600;
+// Revalidate daily so the JSON-LD event date rolls to next year once the
+// holiday passes. Titles are static; the live count is rendered client-side
+// and by the OG card.
+export const revalidate = 86400;
 
 interface HolidayPageProps {
   params: Promise<{ slug: string }>;
@@ -19,8 +24,8 @@ interface HolidayPageProps {
 /**
  * Resolve the holiday for a dynamic route, or trigger a 404.
  *
- * Christmas lives at the home page (`/`), so `/christmas` and any unknown slug
- * render the not-found page. Shared by this route's metadata, viewport, and
+ * The home holiday lives at `/`, so its slug and any unknown slug render the
+ * not-found page. Shared by this route's metadata, viewport, and
  * page exports so the slug-resolution guard lives in exactly one place.
  *
  * @param params - the route params promise carrying the slug
@@ -32,7 +37,7 @@ async function resolveHolidayOrNotFound(
   const { slug } = await params;
   const holiday = getHolidayBySlug(slug);
 
-  if (!holiday || slug === 'christmas') {
+  if (!holiday || isHomeHoliday(holiday)) {
     notFound();
   }
 
@@ -64,7 +69,7 @@ export async function generateViewport({
  * This enables static generation at build time for better performance
  */
 export function generateStaticParams(): { slug: string }[] {
-  const slugs = getAllHolidaySlugs().filter(slug => slug !== 'christmas');
+  const slugs = getAllHolidaySlugs().filter(slug => slug !== HOME_HOLIDAY_SLUG);
 
   return slugs.map(slug => ({
     slug,
@@ -79,7 +84,7 @@ export function generateStaticParams(): { slug: string }[] {
  */
 export default async function DynamicHolidayPage({
   params,
-}: HolidayPageProps): Promise<React.JSX.Element> {
+}: HolidayPageProps): Promise<JSX.Element> {
   const holiday = await resolveHolidayOrNotFound(params);
   return <HolidayPage holiday={holiday} />;
 }

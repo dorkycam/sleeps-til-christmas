@@ -1,6 +1,9 @@
+import { BASE_URL } from '@/lib/urls';
+
+import type { JSX, ReactNode } from 'react';
+import type { Metadata, Viewport } from 'next';
+
 import '@/styles/globals.css';
-import { Metadata, Viewport } from 'next';
-import React from 'react';
 
 export const metadata: Metadata = {
   title: {
@@ -10,7 +13,7 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
-  metadataBase: new URL('https://sleepstilchristmas.com'),
+  metadataBase: new URL(BASE_URL),
 };
 
 export const viewport: Viewport = {
@@ -26,8 +29,8 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
-}): React.JSX.Element {
+  children: ReactNode;
+}): JSX.Element {
   return (
     <html lang="en">
       <body>{children}</body>

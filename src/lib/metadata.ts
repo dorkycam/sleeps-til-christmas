@@ -1,38 +1,48 @@
-import { Metadata, Viewport } from 'next';
+import { holidayThemes } from './holidayTheme';
+import { getHolidayUrl } from './urls';
 
-import { Holiday } from '@/components/countdown/HolidayCountdown';
-import {
-  calculateHolidayCountdown,
-  getHolidayDescription,
-} from '@/lib/utils/countdown';
-import { getHolidayUrl } from '@/lib/urls';
-
-import { holidayThemes } from './themes/tokens';
+import type { Metadata, Viewport } from 'next';
+import type { Holiday } from './holidays';
 
 /**
- * Generate dynamic metadata for holiday pages
+ * Page title for a holiday. Static on purpose: the live count lives on the
+ * page and the share card, since cached page titles would go stale.
  *
- * Creates SEO-optimized metadata with Open Graph and Twitter cards
- * that include the current countdown and holiday-specific theming.
+ * @param holiday - the holiday to title
+ * @returns e.g. "sleeps 'til halloween"
+ */
+export function getHolidayTitle(holiday: Pick<Holiday, 'name'>): string {
+  return `sleeps 'til ${holiday.name.toLowerCase()}`;
+}
+
+/**
+ * SEO description for a holiday page.
+ *
+ * @param holiday - the holiday to describe
+ * @returns description text with no sleep count
+ */
+export function getHolidayDescription(
+  holiday: Pick<Holiday, 'name' | 'message'>,
+): string {
+  return `Count the sleeps until ${holiday.name}. ${holiday.message}`;
+}
+
+/**
+ * Generate metadata for a holiday page, with Open Graph and Twitter cards
+ * that point at the live `/api/og` share card.
+ *
+ * @param holiday - the holiday the page counts down to
+ * @returns the page metadata
  */
 export function generateHolidayMetadata(holiday: Holiday): Metadata {
-  const { sleepsUntil, isToday } = calculateHolidayCountdown(holiday);
+  // title.absolute so the layout's "%s | ..." template doesn't double up.
+  const pageTitle = getHolidayTitle(holiday);
   const description = getHolidayDescription(holiday);
   const colors = holidayThemes[holiday.theme];
-
-  // Title carries the live sleep count. The pages use ISR (see `revalidate` in
-  // the route files), so the statically generated title is regenerated
-  // periodically and stays current instead of freezing at build time. Set via
-  // title.absolute so the layout's "%s | ..." template does not double up the
-  // brand suffix.
-  const pageTitle = isToday
-    ? `Happy ${holiday.name}!`
-    : `${sleepsUntil} ${sleepsUntil === 1 ? 'sleep' : 'sleeps'} 'til ${holiday.name}`;
 
   // Keywords for SEO
   const keywords = [
     'holiday countdown',
-    'sleeps until',
     'sleeps until',
     holiday.name.toLowerCase(),
     'christmas countdown',
@@ -60,7 +70,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
           url: `/api/og?holiday=${holiday.slug}`,
           width: 1200,
           height: 630,
-          alt: `${sleepsUntil} sleeps until ${holiday.name}`,
+          alt: pageTitle,
           type: 'image/png',
         },
         // Smaller image for platforms that prefer it
@@ -68,7 +78,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
           url: `/api/og?holiday=${holiday.slug}&size=small`,
           width: 600,
           height: 315,
-          alt: `${sleepsUntil} sleeps until ${holiday.name}`,
+          alt: pageTitle,
           type: 'image/png',
         },
       ],
@@ -84,7 +94,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       images: [
         {
           url: `/api/og?holiday=${holiday.slug}`,
-          alt: `${sleepsUntil} sleeps until ${holiday.name}`,
+          alt: pageTitle,
           width: 1200,
           height: 630,
         },
@@ -165,7 +175,9 @@ export function generateHolidayViewport(holiday: Holiday): Viewport {
 }
 
 /**
- * Generate metadata for the 404 page
+ * Generate metadata for the 404 page.
+ *
+ * @returns non-indexable 404 metadata
  */
 export function generate404Metadata(): Metadata {
   return {

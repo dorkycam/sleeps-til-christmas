@@ -1,30 +1,32 @@
-'use client';
-
-import React, { ReactNode } from 'react';
+import type { CSSProperties, JSX, ReactNode } from 'react';
 
 interface SafePageContainerProps {
   children: ReactNode;
-  background?: string;
+  /** Extra classes for the page root, e.g. its background. */
+  className?: string;
+  /** CSS custom properties for the page, e.g. from `holidayCssVars`. */
+  style?: CSSProperties;
   footerContent?: ReactNode;
   onDoubleClick?: () => void;
 }
 
 /**
  * Full-viewport page container. Renders a fixed footer when footerContent is
- * provided. Background is applied inline so it can vary per holiday.
+ * provided.
  *
- * @param props - container content, background, footer, and double-click handler
+ * @param props - container content, styling, footer, and double-click handler
  */
 export function SafePageContainer({
   children,
-  background,
+  className,
+  style,
   footerContent,
   onDoubleClick,
-}: SafePageContainerProps): React.JSX.Element {
+}: SafePageContainerProps): JSX.Element {
   return (
     <main
-      className="relative h-screen min-h-screen w-full overflow-hidden box-border p-fluid"
-      style={{ background: background || 'transparent' }}
+      className={`relative h-screen min-h-screen w-full overflow-hidden box-border p-fluid ${className ?? ''}`}
+      style={style}
       onDoubleClick={onDoubleClick}
     >
       {children}

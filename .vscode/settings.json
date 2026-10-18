@@ -60,7 +60,7 @@
   // Show inline errors and warnings
   "editor.inlineSuggest.enabled": true,
   "editor.suggest.preview": true,
-  "editor.hover.enabled": true,
+  "editor.hover.enabled": "on",
 
   // Error and warning display
   "editor.showUnused": true,

@@ -1,4 +1,7 @@
-import type { HolidayTheme } from '@/lib/themes/tokens';
+import { holidayThemes } from './holidayTheme';
+
+import type { ISourceOptions } from '@tsparticles/engine';
+import type { HolidayTheme } from './holidayTheme';
 
 /** Fields shared by every particle configuration, regardless of shape. */
 interface BaseParticleConfig {
@@ -9,6 +12,7 @@ interface BaseParticleConfig {
   bounce?: boolean; // Whether particles bounce off edges
   onClick?: 'repulse' | 'attract' | 'push'; // Click interaction
   onHover?: 'repulse' | 'attract' | 'grab'; // Hover interaction
+  opacity?: number; // Particle opacity, defaults to 0.5
 }
 
 /** Circle-shaped particles (snow, fireworks, confetti). */
@@ -54,6 +58,7 @@ export const particleConfigs: Record<HolidayTheme, ParticleConfig> = {
     ],
     direction: 'none', // Random floating
     bounce: true, // Bounce off walls
+    opacity: 1, // Full-opacity images read better on black
     onClick: 'repulse', // Push away on click
     onHover: 'repulse', // Push away on hover
   },
@@ -74,15 +79,6 @@ export const particleConfigs: Record<HolidayTheme, ParticleConfig> = {
     onClick: 'repulse', // Push away on click
     onHover: 'attract', // Draw towards cursor (romantic)
   },
-  newyear: {
-    count: 50, // Moderate particle count
-    speed: 3, // Moderate speed
-    size: { min: 2, max: 8 }, // Small fireworks
-    shape: 'circle', // Round fireworks
-    direction: 'none', // Random movement
-    onClick: 'repulse', // Push away on click
-    onHover: 'repulse', // Push away on hover
-  },
   birthday: {
     count: 50, // Many particles for festive feel
     speed: 5, // Fast movement
@@ -92,17 +88,54 @@ export const particleConfigs: Record<HolidayTheme, ParticleConfig> = {
     onClick: 'push', // Push away on click
     onHover: 'attract', // Push away on hover
   },
-  /**
-   * Default configuration for unrecognized themes
-   * Provides a clean, neutral particle effect.
-   */
-  default: {
-    count: 50, // Moderate particle count
-    speed: 2, // Slow movement
-    size: { min: 2, max: 8 }, // Small particles
-    shape: 'circle', // Simple circles
-    direction: 'none', // Random movement
-    onClick: 'repulse', // Push away on click
-    onHover: 'repulse', // Push away on hover
-  },
 };
+
+/**
+ * Build the tsparticles options for a holiday theme.
+ *
+ * Pure so it can be memoized per theme by the caller: `<Particles>` reloads
+ * whenever its `options` object changes identity.
+ *
+ * @param theme - holiday theme to build options for
+ * @returns tsparticles source options
+ */
+export function buildParticleOptions(theme: HolidayTheme): ISourceOptions {
+  const config = particleConfigs[theme];
+
+  return {
+    autoPlay: true,
+    fpsLimit: 120,
+    interactivity: {
+      events: {
+        onClick: config.onClick
+          ? { enable: true, mode: config.onClick }
+          : { enable: false },
+        onHover: config.onHover
+          ? { enable: true, mode: config.onHover }
+          : { enable: false },
+      },
+      modes: {
+        push: { quantity: 4 },
+        repulse: { distance: 200, duration: 0.4 },
+        attract: { distance: 200, duration: 0.4 },
+      },
+    },
+    particles: {
+      color: { value: holidayThemes[theme].secondary },
+      move: {
+        direction: config.direction ?? 'none',
+        enable: true,
+        outModes: { default: config.bounce ? 'bounce' : 'out' },
+        speed: config.speed,
+      },
+      number: { density: { enable: true }, value: config.count },
+      opacity: { value: config.opacity ?? 0.5 },
+      shape: {
+        type: config.shape,
+        options: config.shape === 'image' ? { image: config.image } : undefined,
+      },
+      size: { value: config.size },
+    },
+    detectRetina: true,
+  };
+}

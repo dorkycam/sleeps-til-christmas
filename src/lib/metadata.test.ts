@@ -1,12 +1,14 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { Holiday } from '@/components/countdown/HolidayCountdown';
+import type { Holiday } from '@/lib/holidays';
 import {
   generate404Metadata,
   generateHolidayMetadata,
   generateHolidayViewport,
+  getHolidayDescription,
+  getHolidayTitle,
 } from '@/lib/metadata';
-import { holidayThemes } from '@/lib/themes/tokens';
+import { holidayThemes } from '@/lib/holidayTheme';
 
 const christmas: Holiday = {
   slug: 'christmas',
@@ -61,38 +63,36 @@ describe('generateHolidayMetadata — share card', () => {
     expect(twitter?.images?.[0].url).toBe('/api/og?holiday=christmas');
   });
 
-  it('puts the live sleep count in the title and uses the canonical base URL for christmas', () => {
+  it.each([
+    ['0 sleeps out', new Date(2026, 11, 25, 9, 0, 0)],
+    ['1 sleep out', new Date(2026, 11, 24, 9, 0, 0)],
+    ['162 sleeps out', new Date(2026, 6, 16, 9, 0, 0)],
+  ])('uses the same static title and alt text %s', (_, now) => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date(2026, 11, 20, 9, 0, 0)); // Dec 20 2026 -> 5 sleeps
+    vi.setSystemTime(now);
     const md = generateHolidayMetadata(christmas);
+    const title = "sleeps 'til christmas";
 
-    expect(md.title).toEqual({ absolute: "5 sleeps 'til christmas" });
+    expect(md.title).toEqual({ absolute: title });
+    expect(md.openGraph?.title).toBe(title);
+    expect(md.twitter?.title).toBe(title);
+    const ogImages = md.openGraph?.images as Array<{ alt?: string }>;
+    expect(ogImages.map(image => image.alt)).toEqual([title, title]);
+    const twitterImages = (md.twitter as { images?: Array<{ alt?: string }> })
+      .images;
+    expect(twitterImages?.[0].alt).toBe(title);
+  });
+
+  it('uses the canonical base URL for christmas', () => {
+    const md = generateHolidayMetadata(christmas);
     expect(md.openGraph?.url).toBe(BASE_URL);
     expect(md.alternates?.canonical).toBe(BASE_URL);
   });
 
-  it('uses singular "sleep" in the title for exactly one sleep', () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date(2026, 11, 24, 9, 0, 0)); // Dec 24 2026 -> 1 sleep
-    expect(generateHolidayMetadata(christmas).title).toEqual({
-      absolute: "1 sleep 'til christmas",
-    });
-  });
-
-  it('celebrates in the title on the day', () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date(2026, 11, 25, 9, 0, 0)); // Dec 25 2026 -> today
-    expect(generateHolidayMetadata(christmas).title).toEqual({
-      absolute: 'Happy christmas!',
-    });
-  });
-
   it('uses the slug-scoped URL and title for non-christmas holidays', () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date(2026, 9, 1, 9, 0, 0)); // Oct 1 2026 -> 30 sleeps to halloween
     const md = generateHolidayMetadata(halloween);
 
-    expect(md.title).toEqual({ absolute: "30 sleeps 'til halloween" });
+    expect(md.title).toEqual({ absolute: "sleeps 'til halloween" });
     expect(md.openGraph?.url).toBe(`${BASE_URL}/halloween`);
     expect(md.alternates?.canonical).toBe(`${BASE_URL}/halloween`);
     const images = md.openGraph?.images as Array<{ url: string }>;
@@ -106,6 +106,22 @@ describe('generateHolidayMetadata — share card', () => {
 
     expect('themeColor' in md).toBe(false);
     expect('viewport' in md).toBe(false);
+  });
+});
+
+describe('getHolidayTitle', () => {
+  it('lowercases the holiday name', () => {
+    expect(getHolidayTitle({ name: "Riley's birthday" })).toBe(
+      "sleeps 'til riley's birthday",
+    );
+  });
+});
+
+describe('getHolidayDescription', () => {
+  it('describes the holiday without a sleep count', () => {
+    expect(getHolidayDescription(christmas)).toBe(
+      'Count the sleeps until christmas. Merry Christmas!',
+    );
   });
 });
 

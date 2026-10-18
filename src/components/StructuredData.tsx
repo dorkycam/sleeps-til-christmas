@@ -1,13 +1,9 @@
-import type { JSX } from 'react';
+import { calculateHolidayCountdown } from '@/lib/countdown';
+import { getHolidayDescription, getHolidayTitle } from '@/lib/metadata';
+import { BASE_URL, getHolidayUrl, isHomeHoliday } from '@/lib/urls';
 
-import { Holiday } from '@/components/countdown/HolidayCountdown';
-import { BASE_URL, getHolidayUrl } from '@/lib/urls';
-import {
-  calculateHolidayCountdown,
-  formatCountdownTitle,
-  getCountdownLabel,
-  getCountdownNumber,
-} from '@/lib/utils/countdown';
+import type { JSX } from 'react';
+import type { Holiday } from '@/lib/holidays';
 
 interface StructuredDataProps {
   holiday: Holiday;
@@ -18,25 +14,24 @@ interface StructuredDataProps {
  *
  * Helps search engines understand the content and may enable
  * rich snippets in search results.
+ *
+ * @param props - the holiday the page counts down to
  */
 export function StructuredData({ holiday }: StructuredDataProps): JSX.Element {
-  const countdownNumber = getCountdownNumber(holiday);
-  const countdownLabel = getCountdownLabel(holiday);
-  const title = formatCountdownTitle(holiday);
+  const { targetDate } = calculateHolidayCountdown(holiday);
   const pageUrl = getHolidayUrl(holiday);
 
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: title,
-    description: `Track the countdown to ${holiday.name}. ${countdownNumber} ${countdownLabel}!`,
+    name: getHolidayTitle(holiday),
+    description: getHolidayDescription(holiday),
     url: pageUrl,
     mainEntity: {
       '@type': 'Event',
       name: holiday.name,
       description: holiday.message,
-      startDate:
-        calculateHolidayCountdown(holiday).targetDate.format('YYYY-MM-DD'),
+      startDate: targetDate.format('YYYY-MM-DD'),
       eventStatus: 'https://schema.org/EventScheduled',
     },
     publisher: {
@@ -53,7 +48,7 @@ export function StructuredData({ holiday }: StructuredDataProps): JSX.Element {
           name: 'Home',
           item: BASE_URL,
         },
-        ...(holiday.slug !== 'christmas'
+        ...(!isHomeHoliday(holiday)
           ? [
               {
                 '@type': 'ListItem',

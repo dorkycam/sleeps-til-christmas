@@ -1,16 +1,23 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Tailwind's default type scale already covers text-xs..text-9xl (up to
-     128px). This adds the app's hero size. Mirrors the fontSize scale in
-     src/lib/themes/tokens.ts. */
+  /* Static design tokens. Holiday colors are runtime values, so they live in
+     src/lib/holidayTheme.ts and reach CSS as --holiday-* variables. */
+
+  /* Hero size; Tailwind's default type scale stops at text-9xl (128px). */
   --text-10xl: 150px;
 
-  /* Fluid page padding: min 16px, ~4vw, max 32px (tokens.ts spacing md..xl). */
+  /* Fluid page padding: min 16px, ~4vw, max 32px. */
   --spacing-fluid: clamp(16px, 4vw, 32px);
 
   /* Soft drop shadow for interactive buttons. */
   --shadow-btn: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  /* Neutral UI colors used outside the holiday themes (the 404 page). */
+  --color-not-found-from: #f5f7fa;
+  --color-not-found-to: #c3cfe2;
+  --color-muted: #4a5568;
+  --color-strong: #2d3748;
 }
 
 @utility text-shadow-soft {
@@ -21,9 +28,10 @@ html,
 body {
   overflow-x: hidden;
   /* Matches Ant Design's default font stack (its former fontFamily token). */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
   height: fill-available;
   height: -webkit-fill-available;
 }
