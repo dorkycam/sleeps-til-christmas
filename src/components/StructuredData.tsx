@@ -1,9 +1,9 @@
-import { Holiday } from '@/components/countdown/HolidayCountdown';
-import {
-  formatCountdownTitle,
-  getCountdownLabel,
-  getCountdownNumber,
-} from '@/lib/utils/countdown';
+import { calculateHolidayCountdown } from '@/lib/countdown';
+import { getHolidayDescription, getHolidayTitle } from '@/lib/metadata';
+import { BASE_URL, getHolidayUrl, isHomeHoliday } from '@/lib/urls';
+
+import type { JSX } from 'react';
+import type { Holiday } from '@/lib/holidays';
 
 interface StructuredDataProps {
   holiday: Holiday;
@@ -14,38 +14,30 @@ interface StructuredDataProps {
  *
  * Helps search engines understand the content and may enable
  * rich snippets in search results.
+ *
+ * @param props - the holiday the page counts down to
  */
-export function StructuredData({ holiday }: StructuredDataProps) {
-  const countdownNumber = getCountdownNumber(holiday);
-  const countdownLabel = getCountdownLabel(holiday);
-  const title = formatCountdownTitle(holiday);
-  const baseUrl = 'https://sleepstilchristmas.com';
-  const pageUrl =
-    holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`;
+export function StructuredData({ holiday }: StructuredDataProps): JSX.Element {
+  const { targetDate } = calculateHolidayCountdown(holiday);
+  const pageUrl = getHolidayUrl(holiday);
 
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: title,
-    description: `Track the countdown to ${holiday.name}. ${countdownNumber} ${countdownLabel}!`,
+    name: getHolidayTitle(holiday),
+    description: getHolidayDescription(holiday),
     url: pageUrl,
     mainEntity: {
       '@type': 'Event',
       name: holiday.name,
       description: holiday.message,
-      startDate: new Date(
-        new Date().getFullYear(),
-        holiday.month - 1,
-        holiday.day,
-      )
-        .toISOString()
-        .split('T')[0],
+      startDate: targetDate.format('YYYY-MM-DD'),
       eventStatus: 'https://schema.org/EventScheduled',
     },
     publisher: {
       '@type': 'Organization',
       name: "sleeps 'til christmas",
-      url: baseUrl,
+      url: BASE_URL,
     },
     breadcrumb: {
       '@type': 'BreadcrumbList',
@@ -54,9 +46,9 @@ export function StructuredData({ holiday }: StructuredDataProps) {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: baseUrl,
+          item: BASE_URL,
         },
-        ...(holiday.slug !== 'christmas'
+        ...(!isHomeHoliday(holiday)
           ? [
               {
                 '@type': 'ListItem',

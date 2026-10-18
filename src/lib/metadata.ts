@@ -1,32 +1,48 @@
-import { Holiday } from '@/components/countdown/HolidayCountdown';
-import {
-  calculateHolidayCountdown,
-  formatCountdownTitle,
-  getHolidayDescription,
-} from '@/lib/utils/countdown';
-import { Metadata } from 'next';
-import { holidayThemes } from './themes/tokens';
+import { holidayThemes } from './holidayTheme';
+import { getHolidayUrl } from './urls';
 
-const baseUrl = 'https://sleepstilchristmas.com';
+import type { Metadata, Viewport } from 'next';
+import type { Holiday } from './holidays';
 
 /**
- * Generate dynamic metadata for holiday pages
+ * Page title for a holiday. Static on purpose: the live count lives on the
+ * page and the share card, since cached page titles would go stale.
  *
- * Creates SEO-optimized metadata with Open Graph and Twitter cards
- * that include the current countdown and holiday-specific theming.
+ * @param holiday - the holiday to title
+ * @returns e.g. "sleeps 'til halloween"
+ */
+export function getHolidayTitle(holiday: Pick<Holiday, 'name'>): string {
+  return `sleeps 'til ${holiday.name.toLowerCase()}`;
+}
+
+/**
+ * SEO description for a holiday page.
+ *
+ * @param holiday - the holiday to describe
+ * @returns description text with no sleep count
+ */
+export function getHolidayDescription(
+  holiday: Pick<Holiday, 'name' | 'message'>,
+): string {
+  return `Count the sleeps until ${holiday.name}. ${holiday.message}`;
+}
+
+/**
+ * Generate metadata for a holiday page, with Open Graph and Twitter cards
+ * that point at the live `/api/og` share card.
+ *
+ * @param holiday - the holiday the page counts down to
+ * @returns the page metadata
  */
 export function generateHolidayMetadata(holiday: Holiday): Metadata {
-  const { sleepsUntil } = calculateHolidayCountdown(holiday);
+  // title.absolute so the layout's "%s | ..." template doesn't double up.
+  const pageTitle = getHolidayTitle(holiday);
   const description = getHolidayDescription(holiday);
-  const title = formatCountdownTitle(holiday);
   const colors = holidayThemes[holiday.theme];
-
-  const fullTitle = `${title} | sleeps 'til christmas`;
 
   // Keywords for SEO
   const keywords = [
     'holiday countdown',
-    'sleeps until',
     'sleeps until',
     holiday.name.toLowerCase(),
     'christmas countdown',
@@ -35,16 +51,15 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
   ];
 
   return {
-    title: fullTitle,
+    title: { absolute: pageTitle },
     description,
     keywords: keywords.join(', '),
 
     // Open Graph for social sharing (Facebook, Instagram, LinkedIn, WhatsApp, Discord, etc.)
     openGraph: {
-      title: fullTitle,
+      title: pageTitle,
       description,
-      url:
-        holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`,
+      url: getHolidayUrl(holiday),
       siteName: "sleeps 'til christmas",
       type: 'website',
       locale: 'en_US',
@@ -52,18 +67,18 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       // Dynamic social card image (used by most platforms)
       images: [
         {
-          url: `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}`,
+          url: `/api/og?holiday=${holiday.slug}`,
           width: 1200,
           height: 630,
-          alt: `${sleepsUntil} sleeps until ${holiday.name}`,
+          alt: pageTitle,
           type: 'image/png',
         },
         // Smaller image for platforms that prefer it
         {
-          url: `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}&size=small`,
+          url: `/api/og?holiday=${holiday.slug}&size=small`,
           width: 600,
           height: 315,
-          alt: `${sleepsUntil} sleeps until ${holiday.name}`,
+          alt: pageTitle,
           type: 'image/png',
         },
       ],
@@ -74,12 +89,12 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       card: 'summary_large_image',
       site: '@sleepstilxmas', // Add your Twitter handle if you have one
       creator: '@sleepstilxmas',
-      title: fullTitle,
+      title: pageTitle,
       description,
       images: [
         {
-          url: `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}`,
-          alt: `${sleepsUntil} sleeps until ${holiday.name}`,
+          url: `/api/og?holiday=${holiday.slug}`,
+          alt: pageTitle,
           width: 1200,
           height: 630,
         },
@@ -92,7 +107,7 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       'telegram:channel': '@sleepstilchristmas',
 
       // WhatsApp & iMessage meta tags
-      'apple-mobile-web-app-title': fullTitle,
+      'apple-mobile-web-app-title': pageTitle,
       'application-name': "sleeps 'til christmas",
 
       // Pinterest Rich Pins
@@ -105,11 +120,10 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       'theme-color': colors.primary,
 
       // Generic social media meta
-      'social:title': fullTitle,
+      'social:title': pageTitle,
       'social:description': description,
-      'social:image': `/api/og?holiday=${holiday.slug}&sleeps=${sleepsUntil}`,
-      'social:url':
-        holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`,
+      'social:image': `/api/og?holiday=${holiday.slug}`,
+      'social:url': getHolidayUrl(holiday),
     },
 
     // Additional SEO tags
@@ -125,21 +139,9 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
       },
     },
 
-    // Theme color based on holiday (used by mobile browsers and some apps)
-    themeColor: colors.primary,
-
     // Canonical URL
     alternates: {
-      canonical:
-        holiday.slug === 'christmas' ? baseUrl : `${baseUrl}/${holiday.slug}`,
-    },
-
-    // App-like behavior on mobile
-    viewport: {
-      width: 'device-width',
-      initialScale: 1,
-      maximumScale: 5,
-      userScalable: true,
+      canonical: getHolidayUrl(holiday),
     },
 
     // Apple/iOS specific tags
@@ -152,11 +154,34 @@ export function generateHolidayMetadata(holiday: Holiday): Metadata {
 }
 
 /**
- * Generate metadata for the 404 page
+ * Generate the viewport (and theme color) for a holiday page.
+ *
+ * Kept separate from metadata per Next.js's viewport API, which requires
+ * viewport and themeColor to live in a `generateViewport`/`viewport` export
+ * rather than inside the metadata object.
+ *
+ * @param holiday - Holiday to theme the viewport for
+ * @returns the page viewport configuration
+ */
+export function generateHolidayViewport(holiday: Holiday): Viewport {
+  const colors = holidayThemes[holiday.theme];
+  return {
+    themeColor: colors.primary,
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  };
+}
+
+/**
+ * Generate metadata for the 404 page.
+ *
+ * @returns non-indexable 404 metadata
  */
 export function generate404Metadata(): Metadata {
   return {
-    title: "Page Not Found | sleeps 'til christmas",
+    title: 'Page Not Found',
     description:
       "The page you're looking for seems to have wandered off into the holiday spirit. Choose from our festive destinations to get back to celebrating!",
     robots: {

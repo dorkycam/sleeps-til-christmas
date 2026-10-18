@@ -1,39 +1,39 @@
-import AntdRegistry from '@/lib/antd-registry';
-import StyledComponentsRegistry from '@/lib/registry';
-import { defaultAntdTheme } from '@/styles/antdTheme';
+import { BASE_URL } from '@/lib/urls';
+
+import type { JSX, ReactNode } from 'react';
+import type { Metadata, Viewport } from 'next';
+
 import '@/styles/globals.css';
-import { ConfigProvider } from 'antd';
-import { Metadata } from 'next';
-import React from 'react';
 
 export const metadata: Metadata = {
   title: {
     template: "%s | sleeps 'til christmas",
     default: "sleeps 'til christmas",
   },
-  viewport: 'width=device-width, initial-scale=1',
   icons: {
     icon: '/favicon.ico',
   },
-  metadataBase: new URL('https://sleepstilchristmas.com'),
+  metadataBase: new URL(BASE_URL),
 };
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
+/**
+ * Root layout. Wraps every route; provides global styles and metadata.
+ *
+ * @param props.children - content to render inside the document body
+ */
 export default function RootLayout({
-  // Layouts must accept a children prop.
-  // This will be populated with nested layouts or pages
   children,
 }: {
-  children: React.ReactNode;
-}) {
+  children: ReactNode;
+}): JSX.Element {
   return (
     <html lang="en">
-      <body>
-        <AntdRegistry>
-          <ConfigProvider theme={defaultAntdTheme}>
-            <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
-          </ConfigProvider>
-        </AntdRegistry>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

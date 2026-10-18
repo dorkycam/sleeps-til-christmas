@@ -1,37 +1,75 @@
-import { HolidayPage } from '@/components';
-import {
-  getAllHolidaySlugs,
-  getHolidayBySlug,
-  isValidHolidaySlug,
-} from '@/lib/holidays';
-import { generateHolidayMetadata } from '@/lib/metadata';
 import { notFound } from 'next/navigation';
+
+import { HolidayPage } from '@/components/HolidayPage';
+import { getAllHolidaySlugs, getHolidayBySlug } from '@/lib/holidays';
+import {
+  generateHolidayMetadata,
+  generateHolidayViewport,
+} from '@/lib/metadata';
+import { HOME_HOLIDAY_SLUG, isHomeHoliday } from '@/lib/urls';
+
+import type { JSX } from 'react';
+import type { Metadata, Viewport } from 'next';
+import type { Holiday } from '@/lib/holidays';
+
+// Revalidate daily so the JSON-LD event date rolls to next year once the
+// holiday passes. Titles are static; the live count is rendered client-side
+// and by the OG card.
+export const revalidate = 86400;
 
 interface HolidayPageProps {
   params: Promise<{ slug: string }>;
 }
 
 /**
- * Generate metadata for dynamic holiday pages
+ * Resolve the holiday for a dynamic route, or trigger a 404.
+ *
+ * The home holiday lives at `/`, so its slug and any unknown slug render the
+ * not-found page. Shared by this route's metadata, viewport, and
+ * page exports so the slug-resolution guard lives in exactly one place.
+ *
+ * @param params - the route params promise carrying the slug
+ * @returns the resolved holiday (does not return for invalid slugs)
  */
-export async function generateMetadata({ params }: HolidayPageProps) {
+async function resolveHolidayOrNotFound(
+  params: HolidayPageProps['params'],
+): Promise<Holiday> {
   const { slug } = await params;
   const holiday = getHolidayBySlug(slug);
 
-  if (!holiday || slug === 'christmas') {
-    // Christmas is handled by the home page, redirect to 404 for /christmas
+  if (!holiday || isHomeHoliday(holiday)) {
     notFound();
   }
 
+  return holiday;
+}
+
+/**
+ * Generate metadata for dynamic holiday pages
+ */
+export async function generateMetadata({
+  params,
+}: HolidayPageProps): Promise<Metadata> {
+  const holiday = await resolveHolidayOrNotFound(params);
   return generateHolidayMetadata(holiday);
+}
+
+/**
+ * Generate viewport for dynamic holiday pages
+ */
+export async function generateViewport({
+  params,
+}: HolidayPageProps): Promise<Viewport> {
+  const holiday = await resolveHolidayOrNotFound(params);
+  return generateHolidayViewport(holiday);
 }
 
 /**
  * Generate static paths for all holidays (except Christmas)
  * This enables static generation at build time for better performance
  */
-export function generateStaticParams() {
-  const slugs = getAllHolidaySlugs().filter(slug => slug !== 'christmas');
+export function generateStaticParams(): { slug: string }[] {
+  const slugs = getAllHolidaySlugs().filter(slug => slug !== HOME_HOLIDAY_SLUG);
 
   return slugs.map(slug => ({
     slug,
@@ -44,15 +82,9 @@ export function generateStaticParams() {
  * Handles all holiday routes except Christmas (which is at /)
  * Uses the slug to determine which holiday to display
  */
-export default async function DynamicHolidayPage({ params }: HolidayPageProps) {
-  const { slug } = await params;
-
-  // Validate the slug and get holiday data
-  if (!isValidHolidaySlug(slug) || slug === 'christmas') {
-    notFound();
-  }
-
-  const holiday = getHolidayBySlug(slug)!;
-
+export default async function DynamicHolidayPage({
+  params,
+}: HolidayPageProps): Promise<JSX.Element> {
+  const holiday = await resolveHolidayOrNotFound(params);
   return <HolidayPage holiday={holiday} />;
 }

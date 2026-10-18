@@ -1,4 +1,20 @@
-import { Holiday } from '@/components/countdown/HolidayCountdown';
+import type { HolidayTheme } from './holidayTheme';
+
+/** Icon shown next to a holiday in link lists (mapped to lucide icons). */
+export type IconName =
+  'home' | 'heart' | 'smile' | 'fireworks' | 'tree' | 'pumpkin' | 'gift';
+
+/** Everything needed to render and describe one holiday countdown. */
+export interface Holiday {
+  slug: string;
+  month: number;
+  day: number;
+  message: string;
+  name: string;
+  theme: HolidayTheme;
+  iconName: IconName;
+  spotifyLinks?: string[];
+}
 
 /**
  * Holiday Database
@@ -58,7 +74,20 @@ export const holidays = {
  * @returns Holiday object or undefined if not found
  */
 export function getHolidayBySlug(slug: string): Holiday | undefined {
-  return holidays[slug as HolidaySlug];
+  return isHolidaySlug(slug) ? holidays[slug] : undefined;
+}
+
+/**
+ * Narrow an arbitrary string to a known holiday slug.
+ *
+ * Uses an own-property check so inherited object keys such as `constructor`
+ * or `toString` are not mistaken for holidays.
+ *
+ * @param slug - candidate slug, e.g. from a URL
+ * @returns true if the slug names a holiday
+ */
+function isHolidaySlug(slug: string): slug is HolidaySlug {
+  return Object.hasOwn(holidays, slug);
 }
 
 /**
@@ -80,41 +109,4 @@ export function getAllHolidaySlugs(): HolidaySlug[] {
   return Object.keys(holidays) as HolidaySlug[];
 }
 
-/**
- * Check if a slug is a valid holiday
- *
- * @param slug - The slug to validate
- * @returns true if the slug exists in the holiday database
- */
-export function isValidHolidaySlug(slug: string): slug is HolidaySlug {
-  return slug in holidays;
-}
-
-/**
- * Get the default holiday (Christmas)
- *
- * @returns The default holiday object
- */
-export function getDefaultHoliday(): Holiday {
-  return holidays.christmas;
-}
-
-// Type helpers for better TypeScript support
 export type HolidaySlug = keyof typeof holidays;
-export type HolidayRecord = typeof holidays;
-
-// Utility type to get a holiday from its slug
-export type GetHoliday<T extends HolidaySlug> = (typeof holidays)[T];
-
-// Re-export countdown utilities for backward compatibility
-export {
-  calculateHolidayCountdown,
-  formatCountdownTitle,
-  getCelebrationMessage,
-  getCountdownLabel,
-  getCountdownNumber,
-  getDaysUntilHoliday,
-  getHolidayDescription,
-  getSleepsUntilHoliday,
-  isHolidayToday,
-} from '@/lib/utils/countdown';
